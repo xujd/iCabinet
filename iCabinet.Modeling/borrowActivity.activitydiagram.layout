@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<activityDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="borrowActivity">
+  <activityRootModelMoniker Id="f3945352-ddbc-41b4-8781-c0c0db9b8f8e" />
+  <nestedChildShapes>
+    <initialNodeShape Id="603f1387-153d-42de-b939-f5a7a58d3caa" absoluteBounds="3.625, 0.5, 0.125, 0.125" customColor="89, 89, 89">
+      <initialNodeMoniker Id="94374391-91e2-494a-9624-61efde2ea99b" LastKnownName="Initial1" />
+    </initialNodeShape>
+    <actionShape Id="0b7ef148-0e49-4e75-9b40-a4cb2b1d5681" absoluteBounds="3.125, 1, 1.125, 0.5" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="ba6689b1-078f-4345-8f63-faa6489a7bda" LastKnownName="登记借用，录入借用人、借用时间、预计归还时间等" />
+    </actionShape>
+    <actionShape Id="2be26156-e93c-41c5-be2e-076b64ee2f1e" absoluteBounds="3.125, 1.75, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="936fbad2-caae-41a2-93bd-46591725129e" LastKnownName="智能柜刷脸借用" />
+    </actionShape>
+    <actionShape Id="6ca4948a-9272-48f1-b43d-b3abd627154c" absoluteBounds="3.125, 2.5, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="61360e8b-2ac4-486b-83d0-e85531f43480" LastKnownName="检查借用人与借用数据" />
+    </actionShape>
+    <actionShape Id="ffc21e3c-cd57-4ee3-abd1-f51cbb959343" absoluteBounds="3.125, 3.25, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="1cfdaf1b-70cb-4d19-abde-b5583d950d01" LastKnownName="打开指定柜门" />
+    </actionShape>
+    <activityFinalNodeShape Id="3a8e282b-13ad-4aec-a543-4ce5eb9ead1b" absoluteBounds="3.625, 4, 0.125, 0.125" customColor="89, 89, 89">
+      <activityFinalNodeMoniker Id="c27c864c-2427-473a-a9d3-ed77395cf7ec" LastKnownName="ActivityFinal1" />
+    </activityFinalNodeShape>
+    <controlFlowConnector edgePoints="[(3.6875 : 0.625); (3.6875 : 1)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="da5d3a89-adc0-4394-b523-00a3f443f9b9" />
+      <relativeChildShapes />
+      <nodes>
+        <initialNodeShapeMoniker Id="603f1387-153d-42de-b939-f5a7a58d3caa" />
+        <actionShapeMoniker Id="0b7ef148-0e49-4e75-9b40-a4cb2b1d5681" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.6875 : 1.5); (3.6875 : 1.75)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="eb975bee-964c-4321-b711-2327834ce4be" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="0b7ef148-0e49-4e75-9b40-a4cb2b1d5681" />
+        <actionShapeMoniker Id="2be26156-e93c-41c5-be2e-076b64ee2f1e" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.6875 : 2.125); (3.6875 : 2.5)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="e6bce75b-9551-4377-9f95-22fe52d69ed4" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="2be26156-e93c-41c5-be2e-076b64ee2f1e" />
+        <actionShapeMoniker Id="6ca4948a-9272-48f1-b43d-b3abd627154c" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.6875 : 2.875); (3.6875 : 3.25)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="9be6622e-4627-4dd3-a477-a3c50e4944f6" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="6ca4948a-9272-48f1-b43d-b3abd627154c" />
+        <actionShapeMoniker Id="ffc21e3c-cd57-4ee3-abd1-f51cbb959343" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.6875 : 3.625); (3.6875 : 4)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="263b1455-f6d9-4860-9f7a-fd31cf059fec" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="ffc21e3c-cd57-4ee3-abd1-f51cbb959343" />
+        <activityFinalNodeShapeMoniker Id="3a8e282b-13ad-4aec-a543-4ce5eb9ead1b" />
+      </nodes>
+    </controlFlowConnector>
+  </nestedChildShapes>
+</activityDiagram>

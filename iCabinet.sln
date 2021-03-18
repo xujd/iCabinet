@@ -5,6 +5,10 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCabinet", "iCabinet\iCabinet.csproj", "{FDFC9DD2-AD73-4D48-9291-320CCA422F3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCabinet.Core", "iCabinet.Core\iCabinet.Core.csproj", "{064D7AA6-4E2A-4B70-B5C1-6CE65192203E}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "iCabinet.Modeling", "iCabinet.Modeling\iCabinet.Modeling.modelproj", "{DF9B6298-1027-4922-9CFA-3496A2218D59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{FDFC9DD2-AD73-4D48-9291-320CCA422F3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDFC9DD2-AD73-4D48-9291-320CCA422F3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDFC9DD2-AD73-4D48-9291-320CCA422F3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{064D7AA6-4E2A-4B70-B5C1-6CE65192203E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{064D7AA6-4E2A-4B70-B5C1-6CE65192203E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{064D7AA6-4E2A-4B70-B5C1-6CE65192203E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{064D7AA6-4E2A-4B70-B5C1-6CE65192203E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF9B6298-1027-4922-9CFA-3496A2218D59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF9B6298-1027-4922-9CFA-3496A2218D59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF9B6298-1027-4922-9CFA-3496A2218D59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF9B6298-1027-4922-9CFA-3496A2218D59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

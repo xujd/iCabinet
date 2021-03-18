@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="usecase">
+  <useCaseModelRootMoniker Id="0ed2d5f7-b18d-47cf-b7b5-5c548d13868b" />
+  <nestedChildShapes>
+    <actorShape Id="fc29057e-812e-408d-aaa8-bfaa3e23ba6c" absoluteBounds="1.75, 1.625, 0.5, 0.5" isReference="false" heightOffset="0">
+      <actorMoniker Id="ed85d946-0e54-4847-8dc6-1543c1a1cefe" LastKnownName="借用者" />
+      <relativeChildShapes />
+    </actorShape>
+    <useCaseShape Id="2a6183de-fbee-4e2e-a2f2-35fc3b799b2c" absoluteBounds="3.125, 1.125, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="71f9d799-1e85-4811-bd79-c4393e80addc" LastKnownName="借用" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseDependencyConnector edgePoints="[(2.25 : 1.79807692307692); (3.19917084164773 : 1.50602435641608)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <dependencyMoniker Id="1d4ead73-066b-4e7e-a56b-0a107cdfb13e" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="fc29057e-812e-408d-aaa8-bfaa3e23ba6c" />
+        <useCaseShapeMoniker Id="2a6183de-fbee-4e2e-a2f2-35fc3b799b2c" />
+      </nodes>
+    </useCaseDependencyConnector>
+    <useCaseShape Id="71747cd6-e9f6-4fb4-bbda-a65171a6edba" absoluteBounds="3.125, 2.125, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="640d56db-672e-4cff-9913-847aa11b39b8" LastKnownName="归还" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <actorShape Id="cb2f4065-24ca-41e2-8e0e-385222525fba" absoluteBounds="5.5, 2.125, 0.5, 0.5" isReference="false" heightOffset="0">
+      <actorMoniker Id="1810a124-bd40-46ad-a5e3-b8bd41b7e339" LastKnownName="归还者" />
+      <relativeChildShapes />
+    </actorShape>
+    <useCaseDependencyConnector edgePoints="[(5.5 : 2.375); (4.125 : 2.375)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <dependencyMoniker Id="a56f16b0-f81e-4b8d-8dac-9792d53a70da" />
+      <relativeChildShapes />
+      <nodes>
+        <actorShapeMoniker Id="cb2f4065-24ca-41e2-8e0e-385222525fba" />
+        <useCaseShapeMoniker Id="71747cd6-e9f6-4fb4-bbda-a65171a6edba" />
+      </nodes>
+    </useCaseDependencyConnector>
+  </nestedChildShapes>
+</useCaseDiagram>

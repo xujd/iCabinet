@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="iCabinet.Comps.BorrowView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:iCabinet.Comps"
+             mc:Ignorable="d"   xmlns:ctrls="clr-namespace:iCabinet.Controls"
+             xmlns:WPFMediaKit="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="借用"></TextBlock>
+        <WPFMediaKit:VideoCaptureElement x:Name="videoPlayer" Grid.Row="1"></WPFMediaKit:VideoCaptureElement>
+        <TextBlock Text="你已登记的资产如下：" Grid.Row="2"></TextBlock>
+        <DataGrid Grid.Row="3" x:Name="dataGrid">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="RFID" Binding="{Binding RfID}"></DataGridTextColumn>
+                <DataGridTextColumn Header="名称" Binding="{Binding ResName}"></DataGridTextColumn>
+                <DataGridTextColumn Header="借用人" Binding="{Binding TakeStaffName}"></DataGridTextColumn>
+                <DataGridTextColumn Header="登记时间" Binding="{Binding CreatedTime}"></DataGridTextColumn>
+                <DataGridTextColumn Header="预计归还时间" Binding="{Binding ReturnPlanTime}"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="操作" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Tag="{Binding}" Orientation="Horizontal" VerticalAlignment="Center" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown">
+                                <Image Source="../Images/borrow.png" Width="20" Height="20"></Image>
+                                <TextBlock Text="取出"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <ctrls:Loading x:Name="loading" Visibility="Visible" Grid.Row="3" Width="36" Height="36"></ctrls:Loading>
+    </Grid>
+</UserControl>

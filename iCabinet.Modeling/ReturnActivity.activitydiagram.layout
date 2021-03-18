@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<activityDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="ReturnActivity">
+  <activityRootModelMoniker Id="93f909c1-2bc4-478d-992f-ecf914224386" />
+  <nestedChildShapes>
+    <initialNodeShape Id="2125d29d-bb2f-43fb-a81f-feb91c8e197f" absoluteBounds="3.75, 0.5, 0.125, 0.125" customColor="89, 89, 89">
+      <initialNodeMoniker Id="5ca573c5-1d85-45cc-8d1c-6d1b094f95fb" LastKnownName="Initial1" />
+    </initialNodeShape>
+    <actionShape Id="3832cea2-f026-4388-a453-bf91d62e3c91" absoluteBounds="3.25, 0.75, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="22da53e9-235d-4b46-bdfa-b723e389b122" LastKnownName="智能柜刷脸归还" />
+    </actionShape>
+    <actionShape Id="ed7312af-45ad-4b72-9371-f341674e901a" absoluteBounds="3.25, 2, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="08601462-7f24-44a3-a784-48822d730b17" LastKnownName="读取卡片数据" />
+    </actionShape>
+    <actionShape Id="e2d31e56-2809-47f3-b195-c6b6a2cd1986" absoluteBounds="3.25, 2.625, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="46d6088b-684c-494d-82b3-f7ef2854a565" LastKnownName="读取存放柜子数据" />
+    </actionShape>
+    <actionShape Id="a2e754fe-68db-4fce-ab0e-61fcf4acd731" absoluteBounds="3.25, 3.25, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="d884bbd2-5394-48a1-8415-52281f664054" LastKnownName="打开指定柜门" />
+    </actionShape>
+    <actionShape Id="3967f43a-65be-43c5-b880-f25ec7fbf563" absoluteBounds="3.25, 3.875, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="609a3c27-91d5-4797-b732-2bedd962d189" LastKnownName="关闭柜门" />
+    </actionShape>
+    <activityFinalNodeShape Id="fb5b321e-777e-4a3c-be4c-dd06b63ba671" absoluteBounds="3.75, 5.125, 0.125, 0.125" customColor="89, 89, 89">
+      <activityFinalNodeMoniker Id="7676174f-33bb-4c36-8ddc-2a30a997ed23" LastKnownName="ActivityFinal1" />
+    </activityFinalNodeShape>
+    <controlFlowConnector edgePoints="[(3.8125 : 0.625); (3.8125 : 0.75)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="eb720ece-16dd-4440-95f7-bcb06057edf0" />
+      <relativeChildShapes />
+      <nodes>
+        <initialNodeShapeMoniker Id="2125d29d-bb2f-43fb-a81f-feb91c8e197f" />
+        <actionShapeMoniker Id="3832cea2-f026-4388-a453-bf91d62e3c91" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.8125 : 2.375); (3.8125 : 2.625)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="6b1a8134-5f80-45b4-a4d7-e027496f8a04" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="ed7312af-45ad-4b72-9371-f341674e901a" />
+        <actionShapeMoniker Id="e2d31e56-2809-47f3-b195-c6b6a2cd1986" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.8125 : 3); (3.8125 : 3.25)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="af7e2764-f47a-4841-8171-c84111604319" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="e2d31e56-2809-47f3-b195-c6b6a2cd1986" />
+        <actionShapeMoniker Id="a2e754fe-68db-4fce-ab0e-61fcf4acd731" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.8125 : 3.625); (3.8125 : 3.875)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="8cadc9a9-a6a2-4fab-9508-81ffbf1a798a" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="a2e754fe-68db-4fce-ab0e-61fcf4acd731" />
+        <actionShapeMoniker Id="3967f43a-65be-43c5-b880-f25ec7fbf563" />
+      </nodes>
+    </controlFlowConnector>
+    <actionShape Id="6ceee4e3-d631-44f2-b60c-63768bdc21b9" absoluteBounds="3.25, 4.5, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="ba616234-0f4d-48f9-9e9f-a90398467d31" LastKnownName="记录归还信息" />
+    </actionShape>
+    <controlFlowConnector edgePoints="[(3.8125 : 4.25); (3.8125 : 4.5)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="ec4bba23-e0ad-4c26-a58f-2371e492bce2" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="3967f43a-65be-43c5-b880-f25ec7fbf563" />
+        <actionShapeMoniker Id="6ceee4e3-d631-44f2-b60c-63768bdc21b9" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.8125 : 4.875); (3.8125 : 5.125)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="d310c9e9-c255-49ab-97f4-0590dbd81a4f" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="6ceee4e3-d631-44f2-b60c-63768bdc21b9" />
+        <activityFinalNodeShapeMoniker Id="fb5b321e-777e-4a3c-be4c-dd06b63ba671" />
+      </nodes>
+    </controlFlowConnector>
+    <actionShape Id="d6dbd4df-9327-4048-b280-329f73e097ac" absoluteBounds="3.25, 1.375, 1.125, 0.375" customColor="161, 199, 231">
+      <opaqueActionMoniker Id="14ecf35e-b1ab-4974-87e2-b5bd7ac8363f" LastKnownName="匹配人物，显示借用数据" />
+    </actionShape>
+    <controlFlowConnector edgePoints="[(3.8125 : 1.125); (3.8125 : 1.375)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="3ca8cc72-3236-4721-a745-8acac78f405b" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="3832cea2-f026-4388-a453-bf91d62e3c91" />
+        <actionShapeMoniker Id="d6dbd4df-9327-4048-b280-329f73e097ac" />
+      </nodes>
+    </controlFlowConnector>
+    <controlFlowConnector edgePoints="[(3.8125 : 1.75); (3.8125 : 2)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black">
+      <controlFlowMoniker Id="27d10d14-2980-4d90-b91f-d87fea316cf4" />
+      <relativeChildShapes />
+      <nodes>
+        <actionShapeMoniker Id="d6dbd4df-9327-4048-b280-329f73e097ac" />
+        <actionShapeMoniker Id="ed7312af-45ad-4b72-9371-f341674e901a" />
+      </nodes>
+    </controlFlowConnector>
+  </nestedChildShapes>
+</activityDiagram>

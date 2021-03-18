@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<activityRootModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm11="http://schemas.microsoft.com/dsltools/UseCaseModel" xmlns:dm12="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" dslVersion="1.0.0.0" Id="93f909c1-2bc4-478d-992f-ecf914224386" name="ReturnActivity" linkedPackageId="51cdd6d2-a8ea-4652-8ab0-a54b1b56e419" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="657d6ce1-149e-43f6-b237-160013724c25">
+      <profileInstance Id="be2d99a3-c24e-4df6-86eb-d8afcb2b8184" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="1570445a-1d33-418a-90a9-14dd66575f8e">
+      <profileInstance Id="956f6c60-e279-469f-b00e-b1dc6e4b8f8e" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <activityRootModelHasActivity>
+      <activity Id="3cc3b3b1-f8d1-419e-bc82-ca3b3058130d" name="ReturnActivity" isAbstract="false" isLeaf="false" isActiveClass="false" isReentrant="false" isReadOnly="false" isSingleExecution="false">
+        <elementDefinition Id="bc8ed7fe-2fad-44d8-8e13-112c5fc635f8" />
+        <nodes>
+          <initialNode Id="5ca573c5-1d85-45cc-8d1c-6d1b094f95fb" name="Initial1" isLeaf="false">
+            <elementDefinition Id="3a9a1f52-75f1-4829-a43b-e659805f6261" />
+            <flowNodeTargets>
+              <controlFlow Id="eb720ece-16dd-4440-95f7-bcb06057edf0" isLeaf="false">
+                <opaqueActionMoniker Id="22da53e9-235d-4b46-bdfa-b723e389b122" LastKnownName="智能柜刷脸归还" />
+                <elementDefinition Id="e06fcbb6-3462-43c7-894f-2e6675b68dd0" />
+              </controlFlow>
+            </flowNodeTargets>
+          </initialNode>
+          <opaqueAction Id="22da53e9-235d-4b46-bdfa-b723e389b122" name="智能柜刷脸归还" isLeaf="false">
+            <elementDefinition Id="7ea3c527-1ff7-46a1-bffc-645c933b7754" />
+            <flowNodeTargets>
+              <controlFlow Id="3ca8cc72-3236-4721-a745-8acac78f405b" isLeaf="false">
+                <opaqueActionMoniker Id="14ecf35e-b1ab-4974-87e2-b5bd7ac8363f" LastKnownName="匹配人物，显示借用数据" />
+                <elementDefinition Id="a7bf3d41-60d5-411f-9453-0cb649b309b1" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="08601462-7f24-44a3-a784-48822d730b17" name="读取卡片数据" isLeaf="false">
+            <elementDefinition Id="93f93bfd-cc94-48f0-b934-2292e0a95915" />
+            <flowNodeTargets>
+              <controlFlow Id="6b1a8134-5f80-45b4-a4d7-e027496f8a04" isLeaf="false">
+                <opaqueActionMoniker Id="46d6088b-684c-494d-82b3-f7ef2854a565" LastKnownName="读取存放柜子数据" />
+                <elementDefinition Id="7f75e000-3edf-45e0-a417-a4a894c8dbcb" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="46d6088b-684c-494d-82b3-f7ef2854a565" name="读取存放柜子数据" isLeaf="false">
+            <elementDefinition Id="37d39807-b567-49ad-90e2-ba7ac89f76a3" />
+            <flowNodeTargets>
+              <controlFlow Id="af7e2764-f47a-4841-8171-c84111604319" isLeaf="false">
+                <opaqueActionMoniker Id="d884bbd2-5394-48a1-8415-52281f664054" LastKnownName="打开指定柜门" />
+                <elementDefinition Id="1129643c-ee1f-48e0-bf77-1e7a2b31b0d7" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="d884bbd2-5394-48a1-8415-52281f664054" name="打开指定柜门" isLeaf="false">
+            <elementDefinition Id="6750b2a1-d76b-4a66-875d-589ae926ccf3" />
+            <flowNodeTargets>
+              <controlFlow Id="8cadc9a9-a6a2-4fab-9508-81ffbf1a798a" isLeaf="false">
+                <opaqueActionMoniker Id="609a3c27-91d5-4797-b732-2bedd962d189" LastKnownName="关闭柜门" />
+                <elementDefinition Id="b095dcf5-a5ae-4099-91c7-d402570adfd4" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="609a3c27-91d5-4797-b732-2bedd962d189" name="关闭柜门" isLeaf="false">
+            <elementDefinition Id="a853ca2d-f0f2-468c-ab8c-30ca53620305" />
+            <flowNodeTargets>
+              <controlFlow Id="ec4bba23-e0ad-4c26-a58f-2371e492bce2" isLeaf="false">
+                <opaqueActionMoniker Id="ba616234-0f4d-48f9-9e9f-a90398467d31" LastKnownName="记录归还信息" />
+                <elementDefinition Id="81fa88dc-f605-4254-9e30-b1e156d55ef6" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <activityFinalNode Id="7676174f-33bb-4c36-8ddc-2a30a997ed23" name="ActivityFinal1" isLeaf="false">
+            <elementDefinition Id="dfdc2de7-509a-431f-acff-5433970f86c0" />
+          </activityFinalNode>
+          <opaqueAction Id="ba616234-0f4d-48f9-9e9f-a90398467d31" name="记录归还信息" isLeaf="false">
+            <elementDefinition Id="59e1dc47-9e30-4d1b-91c1-cfc55e73f9ee" />
+            <flowNodeTargets>
+              <controlFlow Id="d310c9e9-c255-49ab-97f4-0590dbd81a4f" isLeaf="false">
+                <activityFinalNodeMoniker Id="7676174f-33bb-4c36-8ddc-2a30a997ed23" LastKnownName="ActivityFinal1" />
+                <elementDefinition Id="f153e11a-a604-4ada-96d5-9f2da50ec744" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="14ecf35e-b1ab-4974-87e2-b5bd7ac8363f" name="匹配人物，显示借用数据" isLeaf="false">
+            <elementDefinition Id="99c5f41a-04ef-4e01-90a9-b5d1230f5200" />
+            <flowNodeTargets>
+              <controlFlow Id="27d10d14-2980-4d90-b91f-d87fea316cf4" isLeaf="false">
+                <opaqueActionMoniker Id="08601462-7f24-44a3-a784-48822d730b17" LastKnownName="读取卡片数据" />
+                <elementDefinition Id="10d328da-cb85-4458-8338-3126ea109510" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+        </nodes>
+      </activity>
+    </activityRootModelHasActivity>
+  </packagedElements>
+  <package Id="51cdd6d2-a8ea-4652-8ab0-a54b1b56e419" name="iCabinet.Modeling">
+    <elementDefinition Id="c0823555-90b8-4ee6-bf18-5765df31968e" />
+  </package>
+</activityRootModel>

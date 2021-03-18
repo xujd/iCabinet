@@ -4,9 +4,103 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iCabinet"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="625">
+        mc:Ignorable="d" Icon="./favicon.ico"
+        Title="iCabinet" Height="350" Width="625">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="30"></Setter>
+            <Setter Property="Width" Value="100"></Setter>
+            <Setter Property="Margin" Value="11,0"></Setter>
+        </Style>
+        <Style x:Key="btnIcon" TargetType="Image">
+            <Setter Property="Height" Value="24"></Setter>
+            <Setter Property="Width" Value="24"></Setter>
+        </Style>
+        <Style TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"></Setter>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="Margin" Value="11,0,0,0"></Setter>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"></Setter>
+            <Setter Property="IsReadOnly" Value="True"></Setter>
+            <Setter Property="RowHeight" Value="30"></Setter>
+            <Setter Property="ColumnHeaderHeight" Value="30"></Setter>
+            <Setter Property="VerticalGridLinesBrush" Value="{x:Null}"></Setter>
+            <Setter Property="HorizontalGridLinesBrush" Value="{x:Null}"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="AlternatingRowBackground" Value="AliceBlue"></Setter>
+        </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <Grid VerticalAlignment="Center">
+                                <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static DataGrid.FocusBorderBrushKey}}"/>
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsSelected" Value="true"/>
+                        <Condition Property="Selector.IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}"/>
+                </MultiTrigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Grid x:Name="actionGrid">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Tag="Borrow" Click="Button_Click">
+                    <StackPanel>
+                        <Image Style="{StaticResource btnIcon}" Source="./Images/borrow.png"></Image>
+                        <TextBlock>借用</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Tag="Return" Click="Button_Click">
+                    <StackPanel>
+                        <Image Style="{StaticResource btnIcon}" Source="./Images/return.png"></Image>
+                        <TextBlock>归还</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <Image MouseLeftButtonDown="Image_MouseLeftButtonDown" Style="{StaticResource btnIcon}" Source="./Images/about.png" Margin="0,0,11,11" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Image>
+        </Grid>
+        <Grid x:Name="contentGrid" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Button Tag="Back" Click="Button_Click" Grid.Row="1">
+                <StackPanel>
+                    <Image Style="{StaticResource btnIcon}" Source="./Images/back.png"></Image>
+                    <TextBlock>返回</TextBlock>
+                </StackPanel>
+            </Button>
+        </Grid>
     </Grid>
 </Window>

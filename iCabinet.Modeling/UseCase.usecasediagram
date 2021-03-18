@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="0ed2d5f7-b18d-47cf-b7b5-5c548d13868b" name="usecase" linkedPackageId="66f3b9a4-b66f-40a9-8063-d379ed6e9f4d" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="a8e1f441-0097-4ad7-9acf-bb11f9915b34">
+      <profileInstance Id="70a68a61-9a65-4c27-9884-3173bbf726c5" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="f27ee76b-b315-4b1d-b72b-73a9b493fd20">
+      <profileInstance Id="9e968b18-3db2-4b57-8c94-d38a81fcbe9d" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="ed85d946-0e54-4847-8dc6-1543c1a1cefe" name="借用者" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="cc68f30d-d6b6-47be-8056-7aba4f5c9b9f" />
+        <suppliersInternal>
+          <dependency Id="1d4ead73-066b-4e7e-a56b-0a107cdfb13e">
+            <useCaseMoniker Id="71f9d799-1e85-4811-bd79-c4393e80addc" LastKnownName="借用" />
+            <elementDefinition Id="cda9ff2a-d0db-4baf-a729-b513f7ee321f" />
+          </dependency>
+        </suppliersInternal>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="71f9d799-1e85-4811-bd79-c4393e80addc" name="借用" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="b2368692-5bd5-4900-84ee-e0ab7be20beb" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="640d56db-672e-4cff-9913-847aa11b39b8" name="归还" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="8c0f1cc8-dc43-4f1d-8211-c27f4277192f" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="1810a124-bd40-46ad-a5e3-b8bd41b7e339" name="归还者" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="6df8ef01-254f-433e-bfd7-338d7c2be6cd" />
+        <suppliersInternal>
+          <dependency Id="a56f16b0-f81e-4b8d-8dac-9792d53a70da">
+            <useCaseMoniker Id="640d56db-672e-4cff-9913-847aa11b39b8" LastKnownName="归还" />
+            <elementDefinition Id="477b05c0-df55-486c-be76-7198b0c38bdd" />
+          </dependency>
+        </suppliersInternal>
+      </actor>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="66f3b9a4-b66f-40a9-8063-d379ed6e9f4d" name="iCabinet.Modeling">
+    <elementDefinition Id="c0823555-90b8-4ee6-bf18-5765df31968e" />
+  </package>
+</useCaseModelRoot>
