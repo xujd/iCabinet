@@ -7,6 +7,23 @@
         mc:Ignorable="d" Icon="./favicon.ico"
         Title="关于" Height="300" Width="300" ResizeMode="NoResize">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Image Source="./Images/about.png" Width="32" Height="32" Margin="11,11,5,0"/>
+        <TextBlock FontSize="18" Foreground="#0033bc" Margin="0,16,0,0" Text="iCabinet" Grid.Column="1" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="0,22">
+            <TextBlock Text="发布版本：1.0.0" Margin="0,5"/>
+            <TextBlock Text="发布日期：2021年3月20日" Margin="0,5"/>
+            <TextBlock Text="运行环境：.Net Framework 4.5.2+" Margin="0,5"/>
+        </StackPanel>
+        <Rectangle Fill="#f0f0f0" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <Button x:Name="btnClose" Click="btnClose_Click" Content="关闭" Grid.Row="2" Grid.Column="1" Width="75" Height="23" Margin="11" HorizontalAlignment="Right"/>
     </Grid>
 </Window>

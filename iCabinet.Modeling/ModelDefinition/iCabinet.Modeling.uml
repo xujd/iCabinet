@@ -102,14 +102,14 @@
                 isLeaf="false">
                 <opaqueActionMoniker
                   Id="fa723465-f2b6-42ff-8c19-835fe65efb2a"
-                  LastKnownName="智能柜刷脸借用"
+                  LastKnownName="智能柜刷脸取出"
                   LastKnownLocation="iCabinet.Modeling.uml" />
               </controlFlow>
             </flowNodeTargets>
           </opaqueAction>
           <opaqueAction
             Id="fa723465-f2b6-42ff-8c19-835fe65efb2a"
-            name="智能柜刷脸借用"
+            name="智能柜刷脸取出"
             isLeaf="false">
             <flowNodeTargets>
               <controlFlow

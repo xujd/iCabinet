@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iCabinet"
         mc:Ignorable="d" Icon="./favicon.ico"
-        Title="设置" Height="300" Width="300" ResizeMode="NoResize">
+        Title="设置" Height="350" Width="625" ResizeMode="NoResize">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="tbSrc" Text="" TextWrapping="Wrap" KeyDown="tbSrc_KeyDown"></TextBox>
+        <TextBox x:Name="tbDest" Text="" TextWrapping="Wrap" KeyDown="tbDest_KeyDown" Grid.Row="1"></TextBox>
     </Grid>
 </Window>

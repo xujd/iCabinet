@@ -35,7 +35,7 @@ namespace iCabinet.Comps
             InitializeComponent();
             this.Unloaded += ReturnView_Unloaded;
 
-            this.dataGrid.ItemsSource = dataList;
+            this.listBox.ItemsSource = dataList;
             spCard.DataReceived += spCard_DataReceived;
             spCard.Error += spCard_Error;
             // 打开读卡器监听

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,13 +35,13 @@ namespace iCabinet.Comps
             InitializeComponent();
 
             this.Unloaded += BorrowView_Unloaded;
-            this.dataGrid.ItemsSource = dataList;
+            this.listBox.ItemsSource = dataList;
             spFactory.DataReceived += SpFactory_DataReceived;
             spFactory.Error += SpFactory_Error;
 
             this.GetData();
 
-            string[] cameras = MultimediaUtil.VideoInputNames;//获取摄像头
+            string[] cameras = MultimediaUtil.VideoInputNames; // 获取摄像头
             if (cameras.Length > 0)
             {
                 this.videoPlayer.VideoCaptureSource = cameras[0];
@@ -73,15 +74,30 @@ namespace iCabinet.Comps
             list.ForEach(item =>
             {
                 dataList.Add(item);
+                dataList.Add(item);
             });
             this.loading.Visibility = Visibility.Collapsed;
         }
 
-
-
-        private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void SaveImage ()
         {
-            var resSling = (sender as StackPanel).Tag as ResSling;
+            // 调用默认摄像头
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)videoPlayer.ActualWidth, (int)videoPlayer.ActualHeight, 96, 96, PixelFormats.Default);
+            bmp.Render(videoPlayer);
+            BitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bmp));
+            // 命名格式
+            string now = DateTime.Now.Year + "" + DateTime.Now.Month + "" + DateTime.Now.Day + "" + DateTime.Now.Hour + "" + DateTime.Now.Minute + "" + DateTime.Now.Second;
+            // 保存路径D盘根目录
+            string filename = "D:\\" + now + ".jpg";
+            FileStream fstream = new FileStream(filename, FileMode.Create);
+            encoder.Save(fstream);
+            fstream.Close();
+        }
+        
+        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var resSling = (sender as FrameworkElement).Tag as ResSling;
             // 发送开锁信号，通知柜门开锁
             if (spFactory.IsOpen) // 已打开，直接发送消息
             {

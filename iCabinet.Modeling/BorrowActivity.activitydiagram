@@ -1,19 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <activityRootModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm11="http://schemas.microsoft.com/dsltools/UseCaseModel" xmlns:dm12="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" dslVersion="1.0.0.0" Id="f3945352-ddbc-41b4-8781-c0c0db9b8f8e" name="borrowActivity" linkedPackageId="6942bb88-0764-43bb-af48-d7f765af2973" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="cbf9682d-d76c-4714-8013-c89d1007afc2">
-      <profileInstance Id="cbb000d9-dece-4ba6-825f-423471f9cc1e" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="1fab5576-04a9-40b7-9c85-23112d1050f6">
-      <profileInstance Id="24ba3ca7-aabc-4bc8-9a8e-ba3881d05853" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <activityRootModelHasActivity>
       <activity Id="95ee5f31-5dc9-4de8-921f-af676566fa54" name="borrowActivity" isAbstract="false" isLeaf="false" isActiveClass="false" isReentrant="false" isReadOnly="false" isSingleExecution="false">
@@ -32,12 +18,12 @@
             <elementDefinition Id="9033d735-78ab-481a-9677-ca5ff8fb9be4" />
             <flowNodeTargets>
               <controlFlow Id="eb975bee-964c-4321-b711-2327834ce4be" isLeaf="false">
-                <opaqueActionMoniker Id="936fbad2-caae-41a2-93bd-46591725129e" LastKnownName="智能柜刷脸借用" />
+                <opaqueActionMoniker Id="936fbad2-caae-41a2-93bd-46591725129e" LastKnownName="智能柜刷脸取出" />
                 <elementDefinition Id="5eb87649-04b9-40b9-a46a-f32b1c7651f1" />
               </controlFlow>
             </flowNodeTargets>
           </opaqueAction>
-          <opaqueAction Id="936fbad2-caae-41a2-93bd-46591725129e" name="智能柜刷脸借用" isLeaf="false">
+          <opaqueAction Id="936fbad2-caae-41a2-93bd-46591725129e" name="智能柜刷脸取出" isLeaf="false">
             <elementDefinition Id="fa723465-f2b6-42ff-8c19-835fe65efb2a" />
             <flowNodeTargets>
               <controlFlow Id="e6bce75b-9551-4377-9f95-22fe52d69ed4" isLeaf="false">
@@ -73,5 +59,19 @@
   </packagedElements>
   <package Id="6942bb88-0764-43bb-af48-d7f765af2973" name="iCabinet.Modeling">
     <elementDefinition Id="c0823555-90b8-4ee6-bf18-5765df31968e" />
+    <profileInstances>
+      <packageHasProfileInstances Id="cbf9682d-d76c-4714-8013-c89d1007afc2">
+        <profileInstance Id="cbb000d9-dece-4ba6-825f-423471f9cc1e" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="1fab5576-04a9-40b7-9c85-23112d1050f6">
+        <profileInstance Id="24ba3ca7-aabc-4bc8-9a8e-ba3881d05853" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </activityRootModel>

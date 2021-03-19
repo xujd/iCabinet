@@ -45,6 +45,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AESUtil.cs" />
     <Compile Include="NETSDK.cs" />
     <Compile Include="PgUtil.cs" />
     <Compile Include="SerialPortFactory.cs" />

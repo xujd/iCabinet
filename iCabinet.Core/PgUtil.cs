@@ -10,11 +10,11 @@ namespace iCabinet.Core
 {
     public class PgUtil
     {
-        public static String CONN_STR = "Host=localhost;Username=postgres;Password=123456;Database=vdcdb";
+        public static String CONN_STR = "Host=localhost;Username=postgres;Password=123456;Database=cmkit";
 
         static PgUtil ()
         {
-            CONN_STR = ConfigurationManager.ConnectionStrings["npg"].ToString();
+            CONN_STR = AESUtil.AESDecrypt(ConfigurationManager.ConnectionStrings["npg"].ToString());
         }
 
         private static String GetConnection(String connection = null)

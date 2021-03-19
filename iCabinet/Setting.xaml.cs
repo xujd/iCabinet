@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iCabinet.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,22 @@ namespace iCabinet
         public Setting()
         {
             InitializeComponent();
+        }
+        
+        private void tbSrc_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                tbDest.Text = AESUtil.AESEncrypt(tbSrc.Text);
+            }
+        }
+
+        private void tbDest_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                tbSrc.Text = AESUtil.AESDecrypt(tbDest.Text);
+            }
         }
     }
 }

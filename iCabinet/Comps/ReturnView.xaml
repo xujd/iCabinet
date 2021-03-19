@@ -7,6 +7,18 @@
              mc:Ignorable="d"  xmlns:ctrls="clr-namespace:iCabinet.Controls"
              xmlns:WPFMediaKit="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="itemTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="Foreground" Value="Gray"></Setter>
+            <Setter Property="Margin" Value="22,0,0,0"></Setter>
+            <Setter Property="Width" Value="70"></Setter>
+        </Style>
+        <Style x:Key="itemValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="Width" Value="130"></Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -14,20 +26,36 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="归还"></TextBlock>
-        <!--<Rectangle Width="300" Height="300" Fill="LightGray" Grid.Row="1"></Rectangle>-->
         <WPFMediaKit:VideoCaptureElement x:Name="videoPlayer" Grid.Row="1"></WPFMediaKit:VideoCaptureElement>
-        <TextBlock Text="你已借出的资产如下：" Grid.Row="2"></TextBlock>
-        <DataGrid Grid.Row="3" x:Name="dataGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="RFID" Binding="{Binding RfID}"></DataGridTextColumn>
-                <DataGridTextColumn Header="名称" Binding="{Binding ResName}"></DataGridTextColumn>
-                <DataGridTextColumn Header="借用人" Binding="{Binding TakeStaffName}"></DataGridTextColumn>
-                <DataGridTextColumn Header="登记时间" Binding="{Binding CreatedTime}"></DataGridTextColumn>
-                <DataGridTextColumn Header="借用时间" Binding="{Binding TakeTime}"></DataGridTextColumn>
-                <DataGridTextColumn Header="预计归还时间" Binding="{Binding ReturnPlanTime}"></DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <ListBox x:Name="listBox" BorderThickness="0" Grid.Row="3" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5,2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource itemTitle}" Text="设备标识"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding RfID}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemTitle}" Text="设备名称"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding ResName}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemTitle}" Text="借用人员"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding TakeStaffName}"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
+                            <TextBlock Style="{StaticResource itemTitle}" Text="借出时间"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding TakeTime}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemTitle}" Text="预还时间"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding ReturnPlanTime}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemTitle}" Text="已用时长"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding UsedDuration}"></TextBlock>
+                        </StackPanel>
+                        <Rectangle Height="1" Fill="LightGray" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom"></Rectangle>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <ctrls:Loading x:Name="loading" Visibility="Visible" Grid.Row="3" Width="36" Height="36"></ctrls:Loading>
     </Grid>
 </UserControl>

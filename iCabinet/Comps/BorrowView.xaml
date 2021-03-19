@@ -7,6 +7,18 @@
              mc:Ignorable="d"   xmlns:ctrls="clr-namespace:iCabinet.Controls"
              xmlns:WPFMediaKit="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="itemTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="Foreground" Value="Gray"></Setter>
+            <Setter Property="Margin" Value="22,0,0,0"></Setter>
+            <Setter Property="Width" Value="70"></Setter>
+        </Style>
+        <Style x:Key="itemValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="Width" Value="130"></Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -14,28 +26,40 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="借用"></TextBlock>
         <WPFMediaKit:VideoCaptureElement x:Name="videoPlayer" Grid.Row="1"></WPFMediaKit:VideoCaptureElement>
-        <TextBlock Text="你已登记的资产如下：" Grid.Row="2"></TextBlock>
-        <DataGrid Grid.Row="3" x:Name="dataGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="RFID" Binding="{Binding RfID}"></DataGridTextColumn>
-                <DataGridTextColumn Header="名称" Binding="{Binding ResName}"></DataGridTextColumn>
-                <DataGridTextColumn Header="借用人" Binding="{Binding TakeStaffName}"></DataGridTextColumn>
-                <DataGridTextColumn Header="登记时间" Binding="{Binding CreatedTime}"></DataGridTextColumn>
-                <DataGridTextColumn Header="预计归还时间" Binding="{Binding ReturnPlanTime}"></DataGridTextColumn>
-                <DataGridTemplateColumn Header="操作" Width="150">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Tag="{Binding}" Orientation="Horizontal" VerticalAlignment="Center" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown">
-                                <Image Source="../Images/borrow.png" Width="20" Height="20"></Image>
-                                <TextBlock Text="取出"></TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <ListBox x:Name="listBox" BorderThickness="0" Grid.Row="3" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5,2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource itemTitle}" Text="设备标识"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding RfID}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemTitle}" Text="设备名称"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding ResName}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemTitle}" Text="借用人员"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding TakeStaffName}"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
+                            <TextBlock Style="{StaticResource itemTitle}" Text="登记时间"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding CreatedTime}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemTitle}" Text="预还时间"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding ReturnPlanTime}"></TextBlock>
+                        </StackPanel>
+                        <Rectangle Height="1" Fill="LightGray" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom"></Rectangle>
+                        <Image Source="../Images/borrow.png" Tag="{Binding}" MouseLeftButtonDown="Image_MouseLeftButtonDown"
+                               Width="36" Height="36" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <ctrls:Loading x:Name="loading" Visibility="Visible" Grid.Row="3" Width="36" Height="36"></ctrls:Loading>
     </Grid>
 </UserControl>
