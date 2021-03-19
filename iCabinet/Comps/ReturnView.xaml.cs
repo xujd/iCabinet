@@ -27,7 +27,7 @@ namespace iCabinet.Comps
     /// </summary>
     public partial class ReturnView : UserControl
     {
-        ObservableCollection<ResSling> dataList = new ObservableCollection<ResSling>();
+        ObservableCollection<ListData> dataList = new ObservableCollection<ListData>();
         SerialPortFactory spCard = new SerialPortFactory();
         SerialPortFactory spCabinet = new SerialPortFactory();
         public ReturnView()
@@ -137,9 +137,10 @@ namespace iCabinet.Comps
         private async void GetData()
         {
             var list = await Service.GetBorrowedSlingsByStaff("张三");
+            var index = 1;
             list.ForEach(item =>
             {
-                dataList.Add(item);
+                dataList.Add(new ListData() { Index = index++, Data = item});
             });
             this.loading.Visibility = Visibility.Collapsed;
         }

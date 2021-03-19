@@ -104,6 +104,7 @@
       <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Loading.cs" />
+    <Compile Include="Models\ListData.cs" />
     <Compile Include="Models\ResSling.cs" />
     <Compile Include="Services\Service.cs" />
     <Compile Include="Setting.xaml.cs">

@@ -36,26 +36,28 @@
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Index}" FontSize="16" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource itemTitle}" Text="设备标识"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding RfID}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.RfID}"></TextBlock>
                             <TextBlock Style="{StaticResource itemTitle}" Text="设备名称"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding ResName}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.ResName}"></TextBlock>
                             <TextBlock Style="{StaticResource itemTitle}" Text="借用人员"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding TakeStaffName}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.TakeStaffName}"></TextBlock>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
                             <TextBlock Style="{StaticResource itemTitle}" Text="登记时间"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding CreatedTime}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.CreatedTime}"></TextBlock>
                             <TextBlock Style="{StaticResource itemTitle}" Text="预还时间"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding ReturnPlanTime}"></TextBlock>
+                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.ReturnPlanTime}"></TextBlock>
                         </StackPanel>
-                        <Rectangle Height="1" Fill="LightGray" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom"></Rectangle>
+                        <Rectangle Height="1" Fill="LightGray" Grid.RowSpan="2" Grid.ColumnSpan="3" VerticalAlignment="Bottom"></Rectangle>
                         <Image Source="../Images/borrow.png" Tag="{Binding}" MouseLeftButtonDown="Image_MouseLeftButtonDown"
-                               Width="36" Height="36" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
+                               Width="36" Height="36" Margin="1" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

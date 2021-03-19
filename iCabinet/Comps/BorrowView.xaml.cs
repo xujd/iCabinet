@@ -27,7 +27,7 @@ namespace iCabinet.Comps
     /// </summary>
     public partial class BorrowView : UserControl
     {
-        ObservableCollection<ResSling> dataList = new ObservableCollection<ResSling>();
+        ObservableCollection<ListData> dataList = new ObservableCollection<ListData>();
         SerialPortFactory spFactory = new SerialPortFactory();
 
         public BorrowView()
@@ -73,8 +73,11 @@ namespace iCabinet.Comps
             var list = await Service.GetBorrowingSlingsByStaff("张三");
             list.ForEach(item =>
             {
-                dataList.Add(item);
-                dataList.Add(item);
+                dataList.Add(new ListData() { Index = 1, Data = item});
+                var new1 = item.Clone();
+                dataList.Add(new ListData() { Index = 2, Data = new1 });
+                var new2 = item.Clone();
+                dataList.Add(new ListData() { Index = 3, Data = new2 });
             });
             this.loading.Visibility = Visibility.Collapsed;
         }
