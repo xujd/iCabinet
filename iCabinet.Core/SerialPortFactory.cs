@@ -31,7 +31,7 @@ namespace iCabinet.Core
         {
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
-            timer.Interval = TimeSpan.FromSeconds(500);
+            timer.Interval = TimeSpan.FromMilliseconds(500);
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -45,7 +45,12 @@ namespace iCabinet.Core
             recvBuffer.Clear();
 
             //字符转换
-            string readString = System.Text.Encoding.Default.GetString(tempData, 0, tempData.Length);
+            var tempStrs = new List<string>();
+            for(var i = 0; i < tempData.Length; i++)
+            {
+                tempStrs.Add(tempData[i].ToString("X2"));
+            }
+            string readString = string.Join(" ", tempStrs);
             Log.WriteLog("INFO-" + this.config.PortName + "：收到内容-" + readString);
             //触发整条记录的处理
             DataReceived?.Invoke(new DataReceivedEventArgs(readString));
@@ -86,7 +91,10 @@ namespace iCabinet.Core
                 //设置各“串口设置”
 
                 this.sp.BaudRate = config.BaudRate;       //波特率
-                this.sp.DataBits = config.DataBits;       //数据位
+                if (config.DataBits > 0)
+                {
+                    this.sp.DataBits = config.DataBits;       //数据位
+                }
                 this.sp.StopBits = config.StopBits;       //停止位
                 this.sp.Parity = config.Parity;             //校验位
 
@@ -112,7 +120,7 @@ namespace iCabinet.Core
             {
                 byte[] readBuffer = new byte[this.sp.ReadBufferSize + 1];
                 int count = this.sp.Read(readBuffer, 0, this.sp.ReadBufferSize);
-                this.recvBuffer.AddRange(readBuffer);
+                this.recvBuffer.AddRange(readBuffer.Take(count));
             }
 
             // 启动定时器，检测数据接收
@@ -123,12 +131,33 @@ namespace iCabinet.Core
             timer.Start();
         }
 
-        public void Write(string message)
+        public void WriteStr(string data)
         {
             if (sp != null)
             {
                 if (!sp.IsOpen) sp.Open();
-                sp.Write(message);
+                
+                sp.Write(data);
+            }
+            else
+            {
+                Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+            }
+        }
+
+        public void Write(string data)
+        {
+            if (sp != null)
+            {
+                if (!sp.IsOpen) sp.Open();
+
+                string[] ss = data.Split(' ');
+                byte[] message = new byte[ss.Length];
+                for (var i = 0; i < ss.Length; i++)
+                {
+                    message[i] = Convert.ToByte(Convert.ToInt32(ss[i], 16));
+                }
+                sp.Write(message, 0, message.Length);
             }
             else
             {

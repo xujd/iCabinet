@@ -10,14 +10,14 @@ namespace iCabinet.Core
 {
     public class PgUtil
     {
-        public static String CONN_STR = "Host=localhost;Username=postgres;Password=123456;Database=cmkit";
+        public static string CONN_STR = "Host=localhost;Username=postgres;Password=123456;Database=cmkit";
 
         static PgUtil ()
         {
             CONN_STR = AESUtil.AESDecrypt(ConfigurationManager.ConnectionStrings["npg"].ToString());
         }
 
-        private static String GetConnection(String connection = null)
+        private static string GetConnection(string connection = null)
         {
             var connString = CONN_STR;
             if (connection != null)
@@ -28,11 +28,11 @@ namespace iCabinet.Core
             return connString;
         }
 
-        public static List<List<Object>> Query(String sql, String connection = null)
+        public static List<List<object>> Query(string sql, string connection = null)
         {
             var connString = GetConnection(connection);
 
-            List<List<Object>> result = new List<List<Object>>();
+            List<List<object>> result = new List<List<object>>();
             try
             {
                 using (var conn = new NpgsqlConnection(connString))
@@ -44,11 +44,11 @@ namespace iCabinet.Core
                         var reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            var rowData = new Object[reader.FieldCount];
+                            var rowData = new object[reader.FieldCount];
                             reader.GetValues(rowData);
 
                             result.Add(rowData.ToList());
-                            Console.WriteLine(String.Join(",", rowData));
+                            Console.WriteLine(string.Join(",", rowData));
                         }
                     }
                 }
@@ -61,11 +61,11 @@ namespace iCabinet.Core
             return result;
         }
 
-        public static async Task<List<List<Object>>> QueryAsync(String sql, String connection = null)
+        public static async Task<List<List<object>>> QueryAsync(string sql, string connection = null)
         {
             var connString = GetConnection(connection);
 
-            List<List<Object>> result = new List<List<Object>>();
+            List<List<object>> result = new List<List<object>>();
             try
             {
                 using (var conn = new NpgsqlConnection(connString))
@@ -77,11 +77,11 @@ namespace iCabinet.Core
                         var reader = await cmd.ExecuteReaderAsync();
                         while (await reader.ReadAsync())
                         {
-                            var rowData = new Object[reader.FieldCount];
+                            var rowData = new object[reader.FieldCount];
                             reader.GetValues(rowData);
 
                             result.Add(rowData.ToList());
-                            Console.WriteLine(String.Join(",", rowData));
+                            Console.WriteLine(string.Join(",", rowData));
                         }
                     }
                 }
@@ -94,11 +94,11 @@ namespace iCabinet.Core
             return result;
         }
 
-        public static Boolean Execute(String sql, String connection = null)
+        public static bool Execute(string sql, string connection = null)
         {
             var connString = GetConnection(connection);
 
-            Boolean result = false;
+            bool result = false;
             try
             {
                 using (var conn = new NpgsqlConnection(connString))
@@ -119,11 +119,11 @@ namespace iCabinet.Core
             return result;
         }
 
-        public static async Task<Boolean> ExecuteAsync(String sql, String connection = null)
+        public static async Task<bool> ExecuteAsync(string sql, string connection = null)
         {
             var connString = GetConnection(connection);
 
-            Boolean result = false;
+            bool result = false;
             try
             {
                 using (var conn = new NpgsqlConnection(connString))

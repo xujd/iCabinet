@@ -27,6 +27,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <WPFMediaKit:VideoCaptureElement x:Name="videoPlayer" Grid.Row="1"></WPFMediaKit:VideoCaptureElement>
+        <TextBlock x:Name="tbInfo" Text=""></TextBlock>
         <ListBox x:Name="listBox" BorderThickness="0" Grid.Row="3" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
             <ListBox.ItemTemplate>
                 <DataTemplate>
