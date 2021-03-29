@@ -2,31 +2,22 @@
 using iCabinet.Models;
 using iCabinet.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.IO.Ports;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using WPFMediaKit.DirectShow.Controls;
 
 namespace iCabinet.Comps
 {
     /// <summary>
     /// Interaction logic for ReturnView.xaml
     /// </summary>
-    public partial class ReturnView : UserControl
+    public partial class ReturnView : UserControl, ICompView
     {
         ObservableCollection<ListData> dataList = new ObservableCollection<ListData>();
         SerialPortFactory spCard = new SerialPortFactory();
@@ -34,18 +25,24 @@ namespace iCabinet.Comps
 
         DispatcherTimer timer = new DispatcherTimer();
 
-        string staffName = "张三";
+        string staffName = "";
         string rfID = "";
         SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
         SolidColorBrush greenBrush = new SolidColorBrush(Colors.Green);
 
+        FaceIDUtil faceIdUtil = null;
+        int faceCount = 0;
+
         public ReturnView()
         {
             InitializeComponent();
-            this.Unloaded += ReturnView_Unloaded;
 
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1);
+
+            faceIdUtil = new FaceIDUtil();
+            faceIdUtil.FaceSearchCompleted += FaceIdUtil_FaceSearchCompleted;
+            faceIdUtil.Init();
 
             this.listBox.ItemsSource = dataList;
             spCard.DataReceived += spCard_DataReceived;
@@ -65,24 +62,51 @@ namespace iCabinet.Comps
             spCabinet.DataReceived += SpCabinet_DataReceived;
             spCabinet.Error += SpCabinet_Error;
 
-            this.GetData();
+            //string[] cameras = MultimediaUtil.VideoInputNames;//获取摄像头
+            //if (cameras.Length > 0)
+            //{
+            //    this.videoPlayer.VideoCaptureSource = cameras[0];
+            //}
 
-            string[] cameras = MultimediaUtil.VideoInputNames;//获取摄像头
-            if (cameras.Length > 0)
+            new Thread(() =>
             {
-                this.videoPlayer.VideoCaptureSource = cameras[0];
-            }
+                Thread.Sleep(100);
+                faceIdUtil.OpenRealData();
+            }).Start();
         }
 
+        private void FaceIdUtil_FaceSearchCompleted(FaceSearchEventArgs e)
+        {
+            if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
+            {
+                if (this.staffName != e.data[0].Name)
+                {
+                    this.staffName = e.data[0].Name;
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        if (this.imgPhoto.Source != null)
+                        {
+                            (this.imgPhoto.Source as BitmapImage).UriSource = null;
+                            this.imgPhoto.Source = null;
+                        }
+                        this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
+                        Log.WriteLog(string.Format("INFO-RET：人脸识别成功，匹配人员-{0}，相似度-{1}。", this.staffName, e.data[0].Similarity));
+                        this.tbInfo.Text = "请刷卡进行设备归还。";
+                        this.imgPhoto.Source = BmpUtil.GetBitmapImage("pack://siteoforigin:,,,/model.jpg");
+                        // 查询用户数据
+                        this.GetData();
+                    }));
+                }
+            }
+        }
+        
         private void Timer_Tick(object sender, EventArgs e)
         {
             this.spCabinet.Write(timer.Tag.ToString()); // 开：80 01 00 00 01 33 B3, 关：80 01 00 00 00 33 B2
         }
 
-        private void ReturnView_Unloaded(object sender, RoutedEventArgs e)
+        public void CleanUp()
         {
-            this.videoPlayer.Close();
-
             this.spCard.Close();
             spCard.DataReceived -= spCard_DataReceived;
             spCard.Error -= spCard_Error;
@@ -93,20 +117,22 @@ namespace iCabinet.Comps
 
             timer.Stop();
             timer.Tick -= Timer_Tick;
+
+            this.faceIdUtil.Destroy();
         }
 
         private void spCard_Error(object sender, System.IO.Ports.SerialErrorReceivedEventArgs e)
         {
             var msg = "读卡失败！请重试。";
             this.ShowMessageInfo(msg, this.redBrush);
-            Log.WriteLog("ERROR：" + msg);
+            Log.WriteLog("ERROR-RET：" + msg);
         }
 
         private void spCard_DataReceived(DataReceivedEventArgs e)
         {
             if (e.data == "02 06 00 00 00 03 C9 F8") // 设置主动发送回复
             {
-                Log.WriteLog("INFO：设置读卡器主动发送成功！");
+                Log.WriteLog("INFO-RET：设置读卡器主动发送成功！");
             }
             else
             {
@@ -116,7 +142,7 @@ namespace iCabinet.Comps
                     var rfID = Convert.ToInt64(string.Join("", e.data.Split(' ').Skip(5).Take(5)), 16).ToString();
                     this.rfID = rfID;
                     var msg = string.Format("检测到{0}归还请求。", rfID);
-                    Log.WriteLog("INFO：" + msg);
+                    Log.WriteLog("INFO-RET：" + msg);
                     // 查询存放位置
                     this.GetCabinetByID(rfID);
                 }
@@ -137,7 +163,7 @@ namespace iCabinet.Comps
             {
                 var msg = string.Format("未找到{0}存放位置信息！", rfID);
                 this.ShowMessageInfo(msg, this.redBrush);
-                Log.WriteLog("ERROR：" + msg);
+                Log.WriteLog("ERROR-RET：" + msg);
             }
         }
 
@@ -145,7 +171,7 @@ namespace iCabinet.Comps
         {
             var msg = "智能锁通信失败！请重试。";
             this.ShowMessageInfo(msg, this.redBrush);
-            Log.WriteLog("ERROR：" + msg);
+            Log.WriteLog("ERROR-RET：" + msg);
         }
 
         private void SpCabinet_DataReceived(DataReceivedEventArgs e)
@@ -170,7 +196,7 @@ namespace iCabinet.Comps
                 {
                     var msg = string.Format("{0}号柜门打开失败，请重试！", Convert.ToInt32(temps[2], 16));
                     this.ShowMessageInfo(msg, this.redBrush);
-                    Log.WriteLog("ERROR：" + msg);
+                    Log.WriteLog("ERROR-RET：" + msg);
                 }
             }
             else if (temps.Length == 5 && temps[0] == "80")
@@ -182,11 +208,11 @@ namespace iCabinet.Comps
                 else if (temps[4] == "00")
                 {
                     this.timer.Stop();
-                    Log.WriteLog(string.Format("{0}号柜门已关闭！操作人员：{1}", Convert.ToInt32(temps[1], 16), this.staffName));
+                    Log.WriteLog(string.Format("INFO-RET：{0}号柜门已关闭！操作人员：{1}", Convert.ToInt32(temps[1], 16), this.staffName));
 
                     this.ReturnSling();
-                    
-                    var msg= string.Format("{0}号柜门已关闭！", Convert.ToInt32(temps[1], 16));
+
+                    var msg = string.Format("{0}号柜门已关闭！", Convert.ToInt32(temps[1], 16));
                     this.ShowMessageInfo(msg, this.greenBrush);
                 }
             }
@@ -194,7 +220,6 @@ namespace iCabinet.Comps
 
         private void ShowMessageInfo(string msg, Brush brush)
         {
-
             this.tbInfo.Foreground = brush;
             this.tbInfo.Text = msg;
         }
@@ -204,13 +229,13 @@ namespace iCabinet.Comps
             var flag = await Service.ReturnSling(this.staffName, this.rfID);
             if (flag)
             {
-                Log.WriteLog(string.Format("INFO：归还记录入库成功！归还人员：{0}-RFID：{1}", this.staffName, this.rfID));
+                Log.WriteLog(string.Format("INFO-RET：归还记录入库成功！归还人员：{0}-RFID：{1}", this.staffName, this.rfID));
                 // 重新获取列表
                 this.GetData();
             }
             else
             {
-                Log.WriteLog(string.Format("INFO：归还记录入库失败，请检查日志！归还人员：{0}-RFID：{1}", this.staffName, this.rfID));
+                Log.WriteLog(string.Format("INFO-RET：归还记录入库失败，请检查日志！归还人员：{0}-RFID：{1}", this.staffName, this.rfID));
             }
         }
 
@@ -248,6 +273,7 @@ namespace iCabinet.Comps
             {
                 dataList.Add(new ListData() { Index = index++, Data = item });
             });
+            this.imgNull.Visibility = dataList.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             this.loading.Visibility = Visibility.Collapsed;
         }
     }

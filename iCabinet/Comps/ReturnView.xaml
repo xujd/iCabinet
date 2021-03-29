@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:iCabinet.Comps"
              mc:Ignorable="d"  xmlns:ctrls="clr-namespace:iCabinet.Controls"
-             xmlns:WPFMediaKit="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <Style x:Key="itemTitle" TargetType="TextBlock">
@@ -26,8 +25,14 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <WPFMediaKit:VideoCaptureElement x:Name="videoPlayer" Grid.Row="1"></WPFMediaKit:VideoCaptureElement>
-        <TextBlock x:Name="tbInfo" Text=""></TextBlock>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5">
+            <!--<WPFMediaKit:VideoCaptureElement x:Name="videoPlayer"></WPFMediaKit:VideoCaptureElement>-->
+            <Image x:Name="imgPhoto" Width="300"></Image>
+            <StackPanel Orientation="Vertical" Grid.Column="1">
+                <TextBlock x:Name="tbHello" Text="身份识别中..."></TextBlock>
+                <TextBlock x:Name="tbInfo" Text=""></TextBlock>
+            </StackPanel>
+        </StackPanel>
         <ListBox x:Name="listBox" BorderThickness="0" Grid.Row="3" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -62,6 +67,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Image x:Name="imgNull" Visibility="Collapsed" Source="../Images/null.png" Stretch="None" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
         <ctrls:Loading x:Name="loading" Visibility="Visible" Grid.Row="3" Width="36" Height="36"></ctrls:Loading>
     </Grid>
 </UserControl>

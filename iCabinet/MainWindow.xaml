@@ -109,9 +109,19 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!--<SolidColorBrush x:Key="backBrush" Color="#00d360">
+        </SolidColorBrush>-->
     </Window.Resources>
     <Grid>
-        <Grid x:Name="actionGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="headerGrid" Background="SkyBlue">
+            <TextBlock x:Name="tbTitle" Text="" VerticalAlignment="Center"></TextBlock>
+            <TextBlock x:Name="tbTime" TextAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
+        </Grid>
+        <Grid x:Name="actionGrid" Grid.Row="1">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button Tag="Borrow" Click="Button_Click">
                     <StackPanel>
@@ -128,7 +138,7 @@
             </StackPanel>
             <Image MouseLeftButtonDown="Image_MouseLeftButtonDown" Width="20" Height="20" Source="./Images/about.png" Margin="0,0,11,11" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Image>
         </Grid>
-        <Grid x:Name="contentGrid" Visibility="Collapsed">
+        <Grid x:Name="contentGrid" Visibility="Collapsed" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="70"/>

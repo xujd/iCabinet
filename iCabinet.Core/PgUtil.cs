@@ -14,7 +14,7 @@ namespace iCabinet.Core
 
         static PgUtil ()
         {
-            CONN_STR = AESUtil.AESDecrypt(ConfigurationManager.ConnectionStrings["npg"].ToString());
+            CONN_STR = AESUtil.AESDecrypt(ConfigurationManager.ConnectionStrings["NPG"].ToString());
         }
 
         private static string GetConnection(string connection = null)

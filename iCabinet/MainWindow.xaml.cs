@@ -2,6 +2,7 @@
 using iCabinet.Core;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace iCabinet
 {
@@ -22,13 +24,26 @@ namespace iCabinet
     /// </summary>
     public partial class MainWindow : Window
     {
+        DispatcherTimer timer = new DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
 
             this.Loaded += MainWindow_Loaded;
+            this.Closing += MainWindow_Closing;
 
-            Log.WriteLog("程序启动");
+            timer.Tick += Timer_Tick;
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Start();
+
+            this.tbTitle.Text = ConfigurationManager.AppSettings["SysTitle"];
+
+            Log.WriteLog("程序启动。");
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            this.tbTime.Text = DateTime.Now.ToString();
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -58,6 +73,20 @@ namespace iCabinet
             //this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
         }
 
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            timer.Tick -= Timer_Tick;
+            timer.Stop();
+
+            if (this.contentGrid.Children.Count > 1)
+            {
+                (this.contentGrid.Children[1] as ICompView).CleanUp();
+                this.contentGrid.Children.RemoveAt(1);
+            }
+            e.Cancel = false;
+            Log.WriteLog("程序退出。");
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var tag = (sender as Button).Tag.ToString();
@@ -76,6 +105,7 @@ namespace iCabinet
                 case "Back":
                     if (this.contentGrid.Children.Count > 1)
                     {
+                        (this.contentGrid.Children[1] as ICompView).CleanUp();
                         this.contentGrid.Children.RemoveAt(1);
                     }
                     this.contentGrid.Visibility = Visibility.Collapsed;

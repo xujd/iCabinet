@@ -2,82 +2,108 @@
 using iCabinet.Models;
 using iCabinet.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using WPFMediaKit.DirectShow.Controls;
 
 namespace iCabinet.Comps
 {
     /// <summary>
     /// Interaction logic for BorrowView.xaml
     /// </summary>
-    public partial class BorrowView : UserControl
+    public partial class BorrowView : UserControl, ICompView
     {
         ObservableCollection<ListData> dataList = new ObservableCollection<ListData>();
         SerialPortFactory spCabinet = new SerialPortFactory();
-        string staffName = "张三";
+        string staffName = "";
         SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
         SolidColorBrush greenBrush = new SolidColorBrush(Colors.Green);
         DispatcherTimer timer = new DispatcherTimer();
         ResSling curSling = null;
 
+        FaceIDUtil faceIdUtil = null;
+        int faceCount = 0;
         public BorrowView()
         {
             InitializeComponent();
-
-            this.Unloaded += BorrowView_Unloaded;
+            
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1);
+
+            faceIdUtil = new FaceIDUtil();
+            faceIdUtil.FaceSearchCompleted += FaceIdUtil_FaceSearchCompleted;
+            faceIdUtil.Init();
 
             this.listBox.ItemsSource = dataList;
             spCabinet.DataReceived += SpFactory_DataReceived;
             spCabinet.Error += SpFactory_Error;
-            // 获取登记数据
-            this.GetData();
 
-            string[] cameras = MultimediaUtil.VideoInputNames; // 获取摄像头
-            if (cameras.Length > 0)
+            //string[] cameras = MultimediaUtil.VideoInputNames; // 获取摄像头
+            //if (cameras.Length > 0)
+            //{
+            //    this.videoPlayer.VideoCaptureSource = cameras[0];
+            //}
+            //this.videoPlayer.MediaOpened += VideoPlayer_MediaOpened;
+
+            new Thread(() =>
             {
-                this.videoPlayer.VideoCaptureSource = cameras[0];
+                Thread.Sleep(100);
+                faceIdUtil.OpenRealData();
+            }).Start();
+        }
+
+        private void FaceIdUtil_FaceSearchCompleted(FaceSearchEventArgs e)
+        {
+            if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
+            {
+                if(this.staffName != e.data[0].Name)
+                {
+                    this.staffName = e.data[0].Name;
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        if(this.imgPhoto.Source != null)
+                        {
+                            (this.imgPhoto.Source as BitmapImage).UriSource = null;
+                            this.imgPhoto.Source = null;
+                        }
+                        this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
+                        this.imgPhoto.Source = BmpUtil.GetBitmapImage("pack://siteoforigin:,,,/model.jpg");
+                        Log.WriteLog(string.Format("INFO-BOW：人脸识别成功，匹配人员-{0}，相似度-{1}。", this.staffName, e.data[0].Similarity));
+                        // 查询用户数据
+                        this.GetData();
+                    }));
+                }
             }
         }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             this.spCabinet.Write(timer.Tag.ToString()); // 开：80 01 00 00 01 33 B3, 关：80 01 00 00 00 33 B2
         }
 
-        private void BorrowView_Unloaded(object sender, RoutedEventArgs e)
+        public void CleanUp()
         {
-            this.videoPlayer.Close();
-
             this.spCabinet.Close();
             spCabinet.DataReceived -= SpFactory_DataReceived;
             spCabinet.Error -= SpFactory_Error;
 
             timer.Stop();
             timer.Tick -= Timer_Tick;
+
+            this.faceIdUtil.Destroy();
         }
 
         private void SpFactory_Error(object sender, System.IO.Ports.SerialErrorReceivedEventArgs e)
         {
             var msg = "智能锁通信失败！请重试。";
             this.ShowMessageInfo(msg, this.redBrush);
-            Log.WriteLog("ERROR：" + msg);
+            Log.WriteLog("ERROR-BOW：" + msg);
         }
 
         private void SpFactory_DataReceived(DataReceivedEventArgs e)
@@ -89,7 +115,7 @@ namespace iCabinet.Comps
                 {
                     var msginfo = string.Format("{0}号柜门已打开！请取走设备，并关闭柜门。", Convert.ToInt32(temps[2], 16));
                     this.ShowMessageInfo(msginfo, this.greenBrush);
-                    Log.WriteLog("INFO：" + msginfo);
+                    Log.WriteLog("INFO-BOW：" + msginfo);
                     // 只要打开柜门，就记录设备已取走
                     this.TakeSling();
                     // 启动轮询定时器查询锁状态
@@ -105,7 +131,7 @@ namespace iCabinet.Comps
                 {
                     var msg = string.Format("{0}号柜门打开失败，请重试！", Convert.ToInt32(temps[2], 16));
                     this.ShowMessageInfo(msg, this.redBrush);
-                    Log.WriteLog("ERROR：" + msg);
+                    Log.WriteLog("ERROR-BOW：" + msg);
                 }
             }
             else if (temps.Length == 5 && temps[0] == "80")
@@ -117,7 +143,7 @@ namespace iCabinet.Comps
                 else if (temps[4] == "00")
                 {
                     timer.Stop();
-                    Log.WriteLog(string.Format("{0}号柜门已关闭！操作人员：{1}", Convert.ToInt32(temps[1], 16), this.staffName));
+                    Log.WriteLog(string.Format("INFO-BOW：{0}号柜门已关闭！操作人员：{1}", Convert.ToInt32(temps[1], 16), this.staffName));
                     var msg = string.Format("{0}号柜门已关闭！", Convert.ToInt32(temps[1], 16));
                     this.ShowMessageInfo(msg, this.greenBrush);
                 }
@@ -129,13 +155,13 @@ namespace iCabinet.Comps
             var flag = await Service.TakeSling(this.staffName, this.curSling.RfID);
             if (flag)
             {
-                Log.WriteLog(string.Format("INFO：取出记录入库成功！取出人员：{0}-RFID：{1}", this.staffName, this.curSling.RfID));
+                Log.WriteLog(string.Format("INFO-BOW：取出记录入库成功！取出人员：{0}-RFID：{1}", this.staffName, this.curSling.RfID));
                 // 重新获取列表
                 this.GetData();
             }
             else
             {
-                Log.WriteLog(string.Format("INFO：取出记录入库失败，请检查日志！取出人员：{0}-RFID：{1}", this.staffName, this.curSling.RfID));
+                Log.WriteLog(string.Format("INFO-BOW：取出记录入库失败，请检查日志！取出人员：{0}-RFID：{1}", this.staffName, this.curSling.RfID));
             }
 
             this.curSling = null;
@@ -155,29 +181,16 @@ namespace iCabinet.Comps
             {
                 dataList.Add(new ListData() { Index = index++, Data = item });
             });
+
+            this.imgNull.Visibility = dataList.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             this.loading.Visibility = Visibility.Collapsed;
         }
 
-        private void SaveImage ()
-        {
-            // 调用默认摄像头
-            RenderTargetBitmap bmp = new RenderTargetBitmap((int)videoPlayer.ActualWidth, (int)videoPlayer.ActualHeight, 96, 96, PixelFormats.Default);
-            bmp.Render(videoPlayer);
-            BitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bmp));
-            // 命名格式
-            string now = DateTime.Now.Year + "" + DateTime.Now.Month + "" + DateTime.Now.Day + "" + DateTime.Now.Hour + "" + DateTime.Now.Minute + "" + DateTime.Now.Second;
-            // 保存路径D盘根目录
-            string filename = "D:\\" + now + ".jpg";
-            FileStream fstream = new FileStream(filename, FileMode.Create);
-            encoder.Save(fstream);
-            fstream.Close();
-        }
-        
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var resSling = ((sender as FrameworkElement).Tag as ListData).Data as ResSling;
             this.curSling = resSling;
+
             // 发送开锁信号，通知柜门开锁
             if (spCabinet.IsOpen) // 已打开，直接发送消息
             {
