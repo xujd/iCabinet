@@ -19,56 +19,73 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5">
-            <!--<WPFMediaKit:VideoCaptureElement x:Name="videoPlayer"></WPFMediaKit:VideoCaptureElement>-->
-            <Image x:Name="imgPhoto" Width="300"></Image>
-            <StackPanel Orientation="Vertical" Grid.Column="1">
-                <TextBlock x:Name="tbHello" Text="身份识别中..."></TextBlock>
-                <TextBlock x:Name="tbInfo" Text=""></TextBlock>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" x:Name="faceGrid">
+            <ctrls:FaceAni></ctrls:FaceAni>
+            <StackPanel Orientation="Vertical" Margin="0,11,0,0">
+                <TextBlock Text="身份识别中..." HorizontalAlignment="Center"></TextBlock>
+                <TextBlock x:Name="tbFaceError" Foreground="Red" Text="" FontSize="14" HorizontalAlignment="Center"></TextBlock>
             </StackPanel>
         </StackPanel>
-        <ListBox x:Name="listBox" BorderThickness="0" Grid.Row="3" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="5,2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="50"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Index}" FontSize="16" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource itemTitle}" Text="设备标识"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.RfID}"></TextBlock>
-                            <TextBlock Style="{StaticResource itemTitle}" Text="设备名称"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.ResName}"></TextBlock>
-                            <TextBlock Style="{StaticResource itemTitle}" Text="借用人员"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.TakeStaffName}"></TextBlock>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
-                            <TextBlock Style="{StaticResource itemTitle}" Text="登记时间"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.CreatedTime}"></TextBlock>
-                            <TextBlock Style="{StaticResource itemTitle}" Text="预还时间"></TextBlock>
-                            <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.ReturnPlanTime}"></TextBlock>
-                        </StackPanel>
-                        <Rectangle Height="1" Fill="LightGray" Grid.RowSpan="2" Grid.ColumnSpan="3" VerticalAlignment="Bottom"></Rectangle>
-                        <Image Source="../Images/borrow.png" Tag="{Binding}" MouseLeftButtonDown="Image_MouseLeftButtonDown"
+        <Grid x:Name="contentGrid" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Column="0" Margin="5">
+                <Image x:Name="imgPhoto" Height="200" Stretch="Uniform" HorizontalAlignment="Left"></Image>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock x:Name="tbHello" Text="身份识别中..."></TextBlock>
+                    <TextBlock x:Name="tbInfo" Text="" FontSize="14"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,22,0,0">
+                    <TextBlock Text="操作步骤："></TextBlock>
+                    <TextBlock Text="1、点击设备列表中的取出图标；" FontSize="14"></TextBlock>
+                    <TextBlock Text="2、系统识别后自动打开存放柜门；" FontSize="14"></TextBlock>
+                    <TextBlock Text="3、取出设备；" FontSize="14"></TextBlock>
+                    <TextBlock Text="4、关闭柜门；" FontSize="14"></TextBlock>
+                    <TextBlock Text="5、完成取出。" FontSize="14"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+            <ListBox x:Name="listBox" BorderThickness="0" Grid.Column="1" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="5,2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Rectangle Fill="#1296db" Width="24" Height="24" RadiusX="12" RadiusY="12"></Rectangle>
+                                <TextBlock Text="{Binding Index}" Foreground="White" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                            </Grid>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource itemTitle}" Text="设备标识"></TextBlock>
+                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.RfID}"></TextBlock>
+                                <TextBlock Style="{StaticResource itemTitle}" Text="设备名称"></TextBlock>
+                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.ResName}"></TextBlock>
+                                <TextBlock Style="{StaticResource itemTitle}" Text="借用人员"></TextBlock>
+                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.TakeStaffName}"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
+                                <TextBlock Style="{StaticResource itemTitle}" Text="登记时间"></TextBlock>
+                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.CreatedTime}"></TextBlock>
+                                <TextBlock Style="{StaticResource itemTitle}" Text="预还时间"></TextBlock>
+                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.ReturnPlanTime}"></TextBlock>
+                            </StackPanel>
+                            <Rectangle Height="1" Fill="LightGray" Grid.RowSpan="2" Grid.ColumnSpan="3" VerticalAlignment="Bottom"></Rectangle>
+                            <Image Source="../Images/borrow.png" Tag="{Binding}" MouseLeftButtonDown="Image_MouseLeftButtonDown"
                                Width="36" Height="36" Margin="1" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Image x:Name="imgNull" Visibility="Collapsed" Source="../Images/null.png" Stretch="None" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
-        <ctrls:Loading x:Name="loading" Visibility="Visible" Grid.Row="3" Width="36" Height="36"></ctrls:Loading>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Image x:Name="imgNull" Visibility="Collapsed" Source="../Images/null.png" Stretch="None" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
+            <ctrls:Loading x:Name="loading" Visibility="Visible" Grid.Column="1" Width="36" Height="36"></ctrls:Loading>
+        </Grid>
     </Grid>
 </UserControl>

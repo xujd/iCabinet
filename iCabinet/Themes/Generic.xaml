@@ -329,4 +329,46 @@
         </Setter>
     </Style>
 
+
+    <Style TargetType="{x:Type local:FaceAni}">
+        <Setter Property="Width" Value="360"/>
+        <Setter Property="Height" Value="360"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:FaceAni}">
+                    <Canvas>
+                        <Canvas.Triggers>
+                            <EventTrigger RoutedEvent="Canvas.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From="0" To="360" Duration="0:0:03" Storyboard.TargetName="img1" RepeatBehavior="Forever"
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+                                        </DoubleAnimation>
+                                        <DoubleAnimation From="360" To="0" Duration="0:0:02" Storyboard.TargetName="img2" RepeatBehavior="Forever"
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+                                        </DoubleAnimation>
+                                        <DoubleAnimation From="100" To="200" Duration="0:0:02" Storyboard.TargetName="img3" RepeatBehavior="Forever" AutoReverse="True"
+                                                         Storyboard.TargetProperty="(Canvas.Top)">
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Canvas.Triggers>
+                        <Image x:Name="img1" Source="../Images/face0.png" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <RotateTransform Angle="0"></RotateTransform>
+                            </Image.RenderTransform>
+                        </Image>
+                        <Image x:Name="img2" Source="../Images/face1.png" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <RotateTransform Angle="360"></RotateTransform>
+                            </Image.RenderTransform>
+                        </Image>
+                        <Image Source="../Images/face2.png" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}"></Image>
+                        <Image x:Name="img3" Source="../Images/scan.png" Width="{TemplateBinding Width}" Stretch="Uniform" Canvas.Top="100"></Image>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

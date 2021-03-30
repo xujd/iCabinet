@@ -42,7 +42,11 @@ namespace iCabinet.Comps
 
             faceIdUtil = new FaceIDUtil();
             faceIdUtil.FaceSearchCompleted += FaceIdUtil_FaceSearchCompleted;
-            faceIdUtil.Init();
+            string err = "";
+            if ((err = faceIdUtil.Init()) != "")
+            {
+                this.tbFaceError.Text = err;
+            }
 
             this.listBox.ItemsSource = dataList;
             spCard.DataReceived += spCard_DataReceived;
@@ -91,8 +95,11 @@ namespace iCabinet.Comps
                         }
                         this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
                         Log.WriteLog(string.Format("INFO-RET：人脸识别成功，匹配人员-{0}，相似度-{1}。", this.staffName, e.data[0].Similarity));
-                        this.tbInfo.Text = "请刷卡进行设备归还。";
+
                         this.imgPhoto.Source = BmpUtil.GetBitmapImage("pack://siteoforigin:,,,/model.jpg");
+
+                        this.contentGrid.Visibility = Visibility.Visible;
+                        this.faceGrid.Visibility = Visibility.Collapsed;
                         // 查询用户数据
                         this.GetData();
                     }));

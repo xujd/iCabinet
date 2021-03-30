@@ -47,7 +47,7 @@ namespace iCabinet.Core
                         IntPtr pPicBuffer = IntPtrOffset(pData, stuFaceMatch.iCapturePicOffset);
                         byte[] pPicBuffer2 = new byte[stuFaceMatch.iCapturePicSize];
                         Marshal.Copy(pPicBuffer, pPicBuffer2, 0, stuFaceMatch.iCapturePicSize);
-                        FileStream fs = new FileStream(stuFaceMatch.stPeopleInfo.szName+".jpg", FileMode.OpenOrCreate);
+                        FileStream fs = new FileStream(stuFaceMatch.stPeopleInfo.szName + ".jpg", FileMode.OpenOrCreate);
                         BinaryWriter binWriter = new BinaryWriter(fs);
                         binWriter.Write(pPicBuffer2, 0, stuFaceMatch.iCapturePicSize);
                         binWriter.Close();
@@ -299,16 +299,18 @@ namespace iCabinet.Core
 
             CONN_STR = AESUtil.AESDecrypt(ConfigurationManager.ConnectionStrings["FaceID"].ToString());
             var strs = CONN_STR.Split(';');
-            foreach(var item in strs)
+            foreach (var item in strs)
             {
                 var index = item.IndexOf('=');
                 if (item.Substring(0, index) == "Host")
                 {
                     server.Host = item.Substring(index + 1);
-                } else if (item.Substring(0, index) == "Port")
+                }
+                else if (item.Substring(0, index) == "Port")
                 {
                     server.Port = int.Parse(item.Substring(index + 1));
-                } else if (item.Substring(0, index) == "Username")
+                }
+                else if (item.Substring(0, index) == "Username")
                 {
                     server.Username = item.Substring(index + 1);
                 }
@@ -321,7 +323,7 @@ namespace iCabinet.Core
             return server;
         }
 
-        public void Init()
+        public string Init()
         {
             uint lResult;
 
@@ -329,7 +331,7 @@ namespace iCabinet.Core
             lResult = NETSDK.SIRIUS_Init();
             if (0 != lResult)
             {
-                var msg = string.Format("初始化SDK失败！错误编码:{0:d}", lResult);
+                var msg = string.Format("初始化SDK失败！错误编码:{0:d}。", lResult);
                 Log.WriteLog("ERROR-FACEID：" + msg);
             }
             Console.WriteLine("初始化SDK成功！");
@@ -344,14 +346,21 @@ namespace iCabinet.Core
             lResult = NETSDK.SIRIUS_Login(ref stLoginInfo, ref UserID);
             if (0 != lResult)
             {
-                var msg = string.Format("登录服务器[{0:s}:{1:d}]失败！错误编码:{2:d}"
+                var msg = string.Format("登录FaceID服务器失败！错误编码:{2:d}。"
                     , stLoginInfo.szIPAddr
                     , stLoginInfo.iPort
                     , lResult
                     );
                 Log.WriteLog("ERROR-FACEID：" + msg);
+
+                return msg;
             }
-            Log.WriteLog(string.Format("INFO-FACEID：登录服务器[{0:s}:{1:d}]成功！", stLoginInfo.szIPAddr, stLoginInfo.iPort));
+            else
+            {
+                Log.WriteLog(string.Format("INFO-FACEID：登录FaceID服务器成功！", stLoginInfo.szIPAddr, stLoginInfo.iPort));
+            }
+
+            return "";
         }
 
         public void Destroy()
@@ -381,23 +390,27 @@ namespace iCabinet.Core
                 lResult = NETSDK.SIRIUS_Logout(UserID);
                 if (0 != lResult)
                 {
-                    var msg = string.Format("注销服务器失败！错误编码:{2:d}", lResult);
+                    var msg = string.Format("注销FaceID服务器失败！错误编码:{2:d}", lResult);
                     Log.WriteLog("ERROR-FACEID：" + msg);
-                    return;
                 }
-                Log.WriteLog("ERROR-FACEID：注销服务器成功！");
-                Thread.Sleep(1 * 1000); // Notes:等待注销消息
+                else
+                {
+                    Log.WriteLog("ERROR-FACEID：注销FaceID服务器成功！");
+                    Thread.Sleep(1 * 1000); // Notes:等待注销消息
 
-                UserID = 0;
+                    UserID = 0;
+                }
             }
             // 销毁SDK
             lResult = NETSDK.SIRIUS_Cleanup();
             if (0 != lResult)
             {
                 Console.WriteLine("销毁SDK失败！错误编码:%d", lResult);
-                return;
             }
-            Console.WriteLine("销毁SDK成功！");
+            else
+            {
+                Console.WriteLine("销毁SDK成功！");
+            }
         }
     }
 

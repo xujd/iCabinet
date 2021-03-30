@@ -117,19 +117,19 @@
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid x:Name="headerGrid" Background="SkyBlue">
-            <TextBlock x:Name="tbTitle" Text="" VerticalAlignment="Center"></TextBlock>
-            <TextBlock x:Name="tbTime" TextAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
+        <Grid x:Name="headerGrid" Background="#1296db">
+            <TextBlock x:Name="tbTitle" Foreground="White" Text="" VerticalAlignment="Center"></TextBlock>
+            <TextBlock x:Name="tbTime" Foreground="White" Margin="0,0,10,0" TextAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
         </Grid>
         <Grid x:Name="actionGrid" Grid.Row="1">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Tag="Borrow" Click="Button_Click">
+                <Button Tag="Borrow" Click="Button_Click" Height="80" Width="200" Margin="50">
                     <StackPanel>
                         <Image Style="{StaticResource btnIcon}" Source="./Images/borrow.png"></Image>
                         <TextBlock VerticalAlignment="Center">借用</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Tag="Return" Click="Button_Click">
+                <Button Tag="Return" Click="Button_Click" Height="80" Width="200" Margin="50">
                     <StackPanel>
                         <Image Style="{StaticResource btnIcon}" Source="./Images/return.png"></Image>
                         <TextBlock VerticalAlignment="Center">归还</TextBlock>

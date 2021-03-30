@@ -38,7 +38,12 @@ namespace iCabinet.Comps
 
             faceIdUtil = new FaceIDUtil();
             faceIdUtil.FaceSearchCompleted += FaceIdUtil_FaceSearchCompleted;
-            faceIdUtil.Init();
+
+            string err = "";
+            if ((err = faceIdUtil.Init()) != "")
+            {
+                this.tbFaceError.Text = err;
+            }
 
             this.listBox.ItemsSource = dataList;
             spCabinet.DataReceived += SpFactory_DataReceived;
@@ -75,6 +80,9 @@ namespace iCabinet.Comps
                         this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
                         this.imgPhoto.Source = BmpUtil.GetBitmapImage("pack://siteoforigin:,,,/model.jpg");
                         Log.WriteLog(string.Format("INFO-BOW：人脸识别成功，匹配人员-{0}，相似度-{1}。", this.staffName, e.data[0].Similarity));
+
+                        this.contentGrid.Visibility = Visibility.Visible;
+                        this.faceGrid.Visibility = Visibility.Collapsed;
                         // 查询用户数据
                         this.GetData();
                     }));
@@ -190,6 +198,7 @@ namespace iCabinet.Comps
         {
             var resSling = ((sender as FrameworkElement).Tag as ListData).Data as ResSling;
             this.curSling = resSling;
+            this.tbInfo.Text = "";
 
             // 发送开锁信号，通知柜门开锁
             if (spCabinet.IsOpen) // 已打开，直接发送消息
@@ -206,7 +215,11 @@ namespace iCabinet.Comps
                 spConfig.DataBits = 8;
                 spConfig.StopBits = System.IO.Ports.StopBits.One; // 停止位
                 // 打开
-                spCabinet.Open(spConfig);
+                string err = "";
+                if((err = spCabinet.Open(spConfig)) != "")
+                {
+                    this.ShowMessageInfo(err, this.redBrush);
+                }
                 // 发开锁消息
                 var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(resSling.CabinetGrid).ToString("X2"));
                 spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));

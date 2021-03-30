@@ -56,13 +56,14 @@ namespace iCabinet.Core
             DataReceived?.Invoke(new DataReceivedEventArgs(readString));
         }
 
-        public void Open(SpConfig config)
+        public string Open(SpConfig config)
         {
             this.config = config;
             if (!SerialPort.GetPortNames().Contains(config.PortName))
             {
-                Log.WriteLog("ERROR-" + config.PortName + "：端口不存在！");
-                return;
+                var err = "ERROR-" + config.PortName + "：端口不存在！";
+                Log.WriteLog(err);
+                return err;
             }
             // 创建新串口
             try
@@ -106,6 +107,8 @@ namespace iCabinet.Core
             {
                 Log.WriteLog("ERROR-" + config.PortName + "：" + ex.Message);
             }
+
+            return "";
         }
 
         private void Sp_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
