@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:iCabinet.Comps"
              mc:Ignorable="d"  xmlns:ctrls="clr-namespace:iCabinet.Controls"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="800" d:DesignWidth="800">
     <UserControl.Resources>
         <Style x:Key="itemTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"></Setter>
@@ -19,13 +19,29 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" x:Name="faceGrid">
-            <ctrls:FaceAni></ctrls:FaceAni>
-            <StackPanel Orientation="Vertical" Margin="0,11,0,0">
-                <TextBlock Text="身份识别中..." HorizontalAlignment="Center"></TextBlock>
-                <TextBlock x:Name="tbFaceError" Foreground="Red" Text="" FontSize="14" HorizontalAlignment="Center"></TextBlock>
+        <Grid x:Name="faceGrid">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
+                <ctrls:FaceAni x:Name="faceAni"></ctrls:FaceAni>
+                <StackPanel Orientation="Horizontal" x:Name="spIdLogin" Visibility="Collapsed">
+                    <TextBlock Text="工号" FontSize="20" VerticalAlignment="Center"></TextBlock>
+                    <TextBox x:Name="txtStaffID" Width="320" Height="50" FontSize="20" Margin="11,0,0,0" Padding="0,11,0,0" Text=""></TextBox>
+                    <Button Margin="11,0,0,0" Click="Button_Click">
+                        <StackPanel>
+                            <Image Source="../Images/people.png" Width="20" Height="20"></Image>
+                            <TextBlock VerticalAlignment="Center">登录</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,11,0,0">
+                    <TextBlock Text="身份识别中..." HorizontalAlignment="Center"></TextBlock>
+                    <TextBlock x:Name="tbFaceError" Foreground="Red" Text="" FontSize="14" HorizontalAlignment="Center"></TextBlock>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+            <StackPanel MouseDown="StackPanel_MouseDown" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,11,0">
+                <Image x:Name="imgAction" Source="../Images/people.png" Width="20" Height="20"></Image>
+                <TextBlock x:Name="txtAction" Tag="ID" Text="使用工号登录" Foreground="#1296db"></TextBlock>
+            </StackPanel>
+        </Grid>
         <Grid x:Name="contentGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>

@@ -12,10 +12,10 @@ namespace iCabinet.Services
     class Service
     {
         // 待取出：take_time等于空，且return_time等于空
-        public static async Task<List<ResSling>> GetBorrowingSlingsByStaff(string staffName)
+        public static async Task<List<ResSling>> GetBorrowingSlingsByStaff(int staffId)
         {
             List<ResSling> dataList = new List<ResSling>();
-            var sqlStr = GetBorrowingSlingSql(staffName);
+            var sqlStr = GetBorrowingSlingSql(staffId);
             var list = await PgUtil.QueryAsync(sqlStr);
             list.ForEach(item =>
             {
@@ -26,10 +26,10 @@ namespace iCabinet.Services
         }
 
         // 待归还：take_time不等于空，且return_time等于空
-        public static async Task<List<ResSling>> GetBorrowedSlingsByStaff(string staffName)
+        public static async Task<List<ResSling>> GetBorrowedSlingsByStaff(int staffId)
         {
             List<ResSling> dataList = new List<ResSling>();
-            var sqlStr = GetBorrowedSlingSql(staffName);
+            var sqlStr = GetBorrowedSlingSql(staffId);
             var list = await PgUtil.QueryAsync(sqlStr);
             list.ForEach(item =>
             {
@@ -56,7 +56,7 @@ namespace iCabinet.Services
             return resSling;
         }
 
-        private static string GetBorrowingSlingSql(string staffName)
+        private static string GetBorrowingSlingSql(int staffId)
         {
             var cabinetID = ConfigurationManager.AppSettings["CabinetID"];
             return "SELECT t1.res_id, t1.rf_id, t1.res_name, t1.take_staff_id, t1.take_staff_name, " +
@@ -65,9 +65,9 @@ namespace iCabinet.Services
                    "FROM t_res_use_log t1 " +
                    "LEFT JOIN t_res_cabinet_grid t4 ON t1.res_id = t4.in_res_id " +
                    "LEFT JOIN t_res_cabinet t5 on t5.id = t4.cabinet_id " +
-                  string.Format("WHERE t1.take_staff_name = '{0}' AND t1.return_time IS NULL AND t1.take_time is NULL AND t4.cabinet_id = {1} ", staffName, cabinetID);
+                  string.Format("WHERE t1.take_staff_id = {0} AND t1.return_time IS NULL AND t1.take_time is NULL AND t4.cabinet_id = {1} ", staffId, cabinetID);
         }
-        private static string GetBorrowedSlingSql(string staffName)
+        private static string GetBorrowedSlingSql(int staffId)
         {
             var cabinetID = ConfigurationManager.AppSettings["CabinetID"];
             return "SELECT t1.res_id, t1.rf_id, t1.res_name, t1.take_staff_id, t1.take_staff_name, " +
@@ -76,7 +76,7 @@ namespace iCabinet.Services
                    "FROM t_res_use_log t1 " +
                    "LEFT JOIN t_res_cabinet_grid t4 ON t1.res_id = t4.in_res_id " +
                    "LEFT JOIN t_res_cabinet t5 on t5.id = t4.cabinet_id " +
-                  string.Format("WHERE t1.take_staff_name = '{0}' AND t1.return_time IS NULL AND t1.take_time is NOT NULL AND t4.cabinet_id = {1} ", staffName, cabinetID);
+                  string.Format("WHERE t1.take_staff_id = {0} AND t1.return_time IS NULL AND t1.take_time is NOT NULL AND t4.cabinet_id = {1} ", staffId, cabinetID);
         }
 
         public static async Task<string[]> GetSlingGrid(string rfId)
@@ -85,7 +85,7 @@ namespace iCabinet.Services
             string[] data = null;
 
             var sqlStr = "SELECT grid_no, cabinet_id FROM t_res_cabinet_grid " +
-                         string.Format("WHERE in_res_id = (SELECT id FROM t_res_sling WHERE rf_id = {0}) AND cabinet_id = {1}", rfId, cabinetID);
+                         string.Format("WHERE in_res_id = (SELECT id FROM t_res_sling WHERE rf_id = '{0}') AND cabinet_id = {1}", rfId, cabinetID);
             var list = await PgUtil.QueryAsync(sqlStr);
             if (list.Count > 0)
             {
@@ -97,25 +97,48 @@ namespace iCabinet.Services
             return data;
         }
 
-        public static async Task<bool> ReturnSling(string staffName, string rfId)
+        public static async Task<bool> ReturnSling(int staffId, string staffName, string rfId)
         {
+            var cabinetID = ConfigurationManager.AppSettings["CabinetID"];
+
             var sqlFormat = "UPDATE t_res_use_log SET return_staff_name = '{0}', " +
-                "return_staff_id = (SELECT id FROM t_sys_staff WHERE name = '{0}'), " +
-                "return_time = '{1}' WHERE  return_time IS NULL AND rf_id = '{2}'";
-            var sqlStr = string.Format(sqlFormat, staffName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), rfId);
+                "return_staff_id = {1}, " +
+                "return_time = '{2}' WHERE  return_time IS NULL AND rf_id = '{3}'";
+            var sqlStr = string.Format(sqlFormat, staffName, staffId, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), rfId);
+            var data = await PgUtil.ExecuteAsync(sqlStr);
+
+            sqlStr = "UPDATE t_res_cabinet_grid SET is_out = 0 " +
+                string.Format("WHERE in_res_id = (SELECT id FROM t_res_sling WHERE rf_id = '{0}') AND cabinet_id = {1}", rfId, cabinetID);
+            data = await PgUtil.ExecuteAsync(sqlStr);
+
+            sqlStr = "UPDATE t_res_sling SET use_status = 1 " +
+                string.Format("WHERE rf_id = '{0}'", rfId);
+            data = await PgUtil.ExecuteAsync(sqlStr);
+
+
+            return data;
+        }
+
+        public static async Task<bool> TakeSling(int staffId, string rfId)
+        {
+            var sqlFormat = "UPDATE t_res_use_log SET take_time = '{0}' " +
+                "WHERE take_time IS NULL AND take_staff_id = {1} AND rf_id = '{2}'";
+            var sqlStr = string.Format(sqlFormat, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), staffId, rfId);
             var data = await PgUtil.ExecuteAsync(sqlStr);
 
             return data;
         }
 
-        public static async Task<bool> TakeSling(string staffName, string rfId)
+        public static async Task<string> GetStaffName(int staffId)
         {
-            var sqlFormat = "UPDATE t_res_use_log SET take_time = '{0}' " +
-                "WHERE take_time IS NULL AND take_staff_name = '{1}' AND rf_id = '{2}'";
-            var sqlStr = string.Format(sqlFormat, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), staffName, rfId);
-            var data = await PgUtil.ExecuteAsync(sqlStr);
+            var sqlStr = string.Format("SELECT name FROM t_sys_staff WHERE id = {0}", staffId);
+            var list = await PgUtil.QueryAsync(sqlStr);
+            if (list.Count > 0)
+            {
+                return list[0][0].ToString();
+            }
 
-            return data;
+            return "";
         }
     }
 }
