@@ -25,7 +25,7 @@
                 <StackPanel Orientation="Horizontal" x:Name="spIdLogin" Visibility="Collapsed">
                     <TextBlock Text="工号" FontSize="20" VerticalAlignment="Center"></TextBlock>
                     <TextBox x:Name="txtStaffID" Width="320" Height="50" FontSize="20" Margin="11,0,0,0" Padding="0,11,0,0" Text=""></TextBox>
-                    <Button Margin="11,0,0,0" Click="Button_Click">
+                    <Button Margin="11,0,0,0" Background="#FFEAF4F7" Width="160" Height="50" Click="Button_Click">
                         <StackPanel>
                             <Image Source="../Images/people.png" Width="20" Height="20"></Image>
                             <TextBlock VerticalAlignment="Center">登录</TextBlock>
@@ -54,14 +54,15 @@
                     <TextBlock x:Name="tbInfo" Text="" FontSize="14"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="0,22,0,0">
-                    <TextBlock Text="操作步骤："></TextBlock>
+                    <TextBlock Text="操作提示："></TextBlock>
                     <TextBlock Text="1、点击设备列表中的取出图标；" FontSize="14"></TextBlock>
-                    <TextBlock Text="2、系统识别后自动打开存放柜门；" FontSize="14"></TextBlock>
+                    <TextBlock Text="2、系统识别后自动打开柜门；" FontSize="14"></TextBlock>
                     <TextBlock Text="3、取出设备；" FontSize="14"></TextBlock>
                     <TextBlock Text="4、关闭柜门；" FontSize="14"></TextBlock>
                     <TextBlock Text="5、完成取出。" FontSize="14"></TextBlock>
                 </StackPanel>
             </StackPanel>
+            <Rectangle Width="1" Fill="LightGray" HorizontalAlignment="Right"/>
             <ListBox x:Name="listBox" BorderThickness="0" Grid.Column="1" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

@@ -12,7 +12,7 @@ namespace iCabinet.Core
     {
         public static string CONN_STR = "Host=localhost;Username=postgres;Password=123456;Database=cmkit";
 
-        static PgUtil ()
+        static PgUtil()
         {
             CONN_STR = AESUtil.AESDecrypt(ConfigurationManager.ConnectionStrings["NPG"].ToString());
         }
@@ -133,6 +133,56 @@ namespace iCabinet.Core
                     using (var cmd = new NpgsqlCommand(sql, conn))
                     {
                         result = await cmd.ExecuteNonQueryAsync() > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WriteLog("ERROR-DB：" + ex.Message);
+            }
+
+            return result;
+        }
+
+        public static async Task<bool> ExecTransactionAsync(List<string> sqls, string connection = null)
+        {
+            var connString = GetConnection(connection);
+
+            bool result = false;
+            try
+            {
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    NpgsqlTransaction tran = conn.BeginTransaction();
+
+                    try
+                    {
+                        foreach(var sql in sqls)
+                        {
+                            using (var cmd = new NpgsqlCommand())
+                            {
+                                cmd.Connection = conn;
+                                cmd.CommandText = sql;
+                                result = await cmd.ExecuteNonQueryAsync() > 0;
+                            }
+                        }
+                    }
+                    catch (Exception ex0)
+                    {
+                        Log.WriteLog("ERROR-DB：" + ex0.Message);
+                        result = false;
+                    }
+                    finally
+                    {
+                        if(result)
+                        {
+                            await tran.CommitAsync();
+                        } else
+                        {
+                            await tran.RollbackAsync();
+                        }
                     }
                 }
             }

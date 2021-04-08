@@ -92,6 +92,7 @@ namespace iCabinet.Comps
             this.staffName = await Service.GetStaffName(id);
             this.Dispatcher.Invoke(new Action(() =>
             {
+                this.txtStaffID.IsEnabled = true;
                 if (string.IsNullOrEmpty(this.staffName))
                 {
                     this.tbFaceError.Text = "员工未登记，请联系管理员！";
@@ -191,7 +192,7 @@ namespace iCabinet.Comps
             }
             else
             {
-                Log.WriteLog(string.Format("INFO-BOW：取出记录入库失败，请检查日志！取出人员：{0}-RFID：{1}", this.staffName, this.curSling.RfID));
+                Log.WriteLog(string.Format("ERROR-BOW：取出记录入库失败，请检查日志！取出人员：{0}-RFID：{1}", this.staffName, this.curSling.RfID));
             }
 
             this.curSling = null;
@@ -255,6 +256,7 @@ namespace iCabinet.Comps
             if (int.TryParse(txtStaffID.Text, out id))
             {
                 this.staffId = id;
+                this.txtStaffID.IsEnabled = false;
                 this.GetStaffData(id, false);
             }
             else
@@ -272,6 +274,7 @@ namespace iCabinet.Comps
                 this.imgAction.Source = BmpUtil.GetBitmapImage("pack://application:,,,/Images/faceid.png");
                 this.faceAni.Visibility = Visibility.Collapsed;
                 this.spIdLogin.Visibility = Visibility.Visible;
+                this.txtStaffID.IsEnabled = true;
             }
             else
             {

@@ -8,8 +8,6 @@
         Title="iCabinet" Height="350" Width="625">
     <Window.Resources>
         <Style TargetType="Button">
-            <Setter Property="Height" Value="50"></Setter>
-            <Setter Property="Width" Value="160"></Setter>
             <Setter Property="Margin" Value="11,0"></Setter>
             <Setter Property="BorderThickness" Value="0"></Setter>
         </Style>
@@ -122,20 +120,55 @@
             <TextBlock x:Name="tbTime" Foreground="White" Margin="0,0,10,0" TextAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
         </Grid>
         <Grid x:Name="actionGrid" Grid.Row="1">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Tag="Borrow" Click="Button_Click" Height="80" Width="200" Margin="50">
+            <Grid Margin="0,0,0,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.25*"/>
+                    <RowDefinition Height="0.25*"/>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="0.3*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Fill="#B2DFF9DF" Margin="20"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Column="1" Grid.ColumnSpan="3"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Column="4"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Column="5"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1" Grid.Column="1"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1" Grid.Column="4"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1" Grid.Column="5"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3" Grid.Column="1"></Rectangle>
+                <Rectangle Fill="#99FFF3D8" Margin="20" Grid.Row="3" Grid.Column="2"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3" Grid.Column="3"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3" Grid.Column="4"></Rectangle>
+                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3" Grid.Column="5"></Rectangle>
+                <Button Tag="Store" Background="#ffdf81" Click="Button_Click" Grid.Row="2" Grid.ColumnSpan="2" Margin="20">
+                    <StackPanel>
+                        <Image Style="{StaticResource btnIcon}" Source="./Images/store.png"></Image>
+                        <TextBlock VerticalAlignment="Center" FontSize="20">寄存</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Tag="Borrow" Background="#B2DDFF84" Click="Button_Click" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="20">
                     <StackPanel>
                         <Image Style="{StaticResource btnIcon}" Source="./Images/borrow.png"></Image>
-                        <TextBlock VerticalAlignment="Center">借用</TextBlock>
+                        <TextBlock VerticalAlignment="Center" FontSize="20">借用</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Tag="Return" Click="Button_Click" Height="80" Width="200" Margin="50">
+                <Button Tag="Return" Background="#B290EE90" Click="Button_Click" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" Margin="20">
                     <StackPanel>
                         <Image Style="{StaticResource btnIcon}" Source="./Images/return.png"></Image>
-                        <TextBlock VerticalAlignment="Center">归还</TextBlock>
+                        <TextBlock VerticalAlignment="Center" FontSize="20">归还</TextBlock>
                     </StackPanel>
                 </Button>
-            </StackPanel>
+            </Grid>
             <Image MouseLeftButtonDown="Image_MouseLeftButtonDown" Width="20" Height="20" Source="./Images/about.png" Margin="0,0,11,11" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Image>
         </Grid>
         <Grid x:Name="contentGrid" Visibility="Collapsed" Grid.Row="1">
@@ -143,7 +176,7 @@
                 <RowDefinition/>
                 <RowDefinition Height="70"/>
             </Grid.RowDefinitions>
-            <Button Tag="Back" Click="Button_Click" Grid.Row="1">
+            <Button Tag="Back" Background="#FFEAF4F7" Height="50" Width="160" Click="Button_Click" Grid.Row="1">
                 <StackPanel>
                     <Image Style="{StaticResource btnIcon}" Source="./Images/back.png"></Image>
                     <TextBlock VerticalAlignment="Center">返回</TextBlock>

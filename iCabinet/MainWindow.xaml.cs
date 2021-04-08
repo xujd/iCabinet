@@ -37,10 +37,10 @@ namespace iCabinet
             timer.Start();
 
             this.tbTitle.Text = ConfigurationManager.AppSettings["SysTitle"];
-
+            
             Log.WriteLog("程序启动。");
         }
-
+        
         private void Timer_Tick(object sender, EventArgs e)
         {
             this.tbTime.Text = DateTime.Now.ToString();
@@ -101,6 +101,11 @@ namespace iCabinet
                     this.actionGrid.Visibility = Visibility.Collapsed;
                     this.contentGrid.Visibility = Visibility.Visible;
                     this.contentGrid.Children.Add(new ReturnView());
+                    break;
+                case "Store":
+                    this.actionGrid.Visibility = Visibility.Collapsed;
+                    this.contentGrid.Visibility = Visibility.Visible;
+                    this.contentGrid.Children.Add(new StoreView());
                     break;
                 case "Back":
                     if (this.contentGrid.Children.Count > 1)

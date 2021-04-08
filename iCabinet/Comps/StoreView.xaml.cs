@@ -6,19 +6,26 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace iCabinet.Comps
 {
     /// <summary>
-    /// Interaction logic for ReturnView.xaml
+    /// Interaction logic for StoreView.xaml
     /// </summary>
-    public partial class ReturnView : UserControl, ICompView
+    public partial class StoreView : UserControl, ICompView
     {
         ObservableCollection<ListData> dataList = new ObservableCollection<ListData>();
         SerialPortFactory spCard = new SerialPortFactory();
@@ -36,12 +43,9 @@ namespace iCabinet.Comps
 
         FaceIDUtil faceIdUtil = null;
 
-        Dictionary<int, string> grid2RFID = new Dictionary<int, string>();
-
-        public ReturnView()
+        public StoreView()
         {
             InitializeComponent();
-
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1);
 
@@ -71,12 +75,6 @@ namespace iCabinet.Comps
             spCabinet.DataReceived += SpCabinet_DataReceived;
             spCabinet.Error += SpCabinet_Error;
 
-            //string[] cameras = MultimediaUtil.VideoInputNames;//获取摄像头
-            //if (cameras.Length > 0)
-            //{
-            //    this.videoPlayer.VideoCaptureSource = cameras[0];
-            //}
-
             new Thread(() =>
             {
                 Thread.Sleep(100);
@@ -88,7 +86,7 @@ namespace iCabinet.Comps
         {
             if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
             {
-                if(txtAction.Tag.ToString() == "FACE" || contentGrid.Visibility == Visibility.Visible) // 当前不是人脸识别状态
+                if (txtAction.Tag.ToString() == "FACE" || contentGrid.Visibility == Visibility.Visible) // 当前不是人脸识别状态
                 {
                     return;
                 }
@@ -117,7 +115,7 @@ namespace iCabinet.Comps
                 this.txtStaffID.IsEnabled = true;
                 if (string.IsNullOrEmpty(this.staffName))
                 {
-                   this.tbFaceError.Text = "员工未登记，请联系管理员！";
+                    this.tbFaceError.Text = "员工未登记，请联系管理员！";
                     return;
                 }
                 if (this.imgPhoto.Source != null)
@@ -130,8 +128,6 @@ namespace iCabinet.Comps
 
                 this.contentGrid.Visibility = Visibility.Visible;
                 this.faceGrid.Visibility = Visibility.Collapsed;
-                // 查询用户数据
-                this.GetData();
             }));
         }
 
@@ -160,18 +156,18 @@ namespace iCabinet.Comps
         {
             var msg = "读卡失败！请重试。";
             this.ShowMessageInfo(msg, this.redBrush);
-            Log.WriteLog("ERROR-RET：" + msg);
+            Log.WriteLog("ERROR-STR：" + msg);
         }
 
         private void spCard_DataReceived(DataReceivedEventArgs e)
         {
             if (e.data == "02 06 00 00 00 03 C9 F8") // 设置主动发送回复
             {
-                Log.WriteLog("INFO-RET：设置读卡器主动发送成功！");
+                Log.WriteLog("INFO-STR：设置读卡器主动发送成功！");
             }
             else
             {
-                if (isOpening) // 柜门未关闭。
+                if(isOpening) // 柜门未关闭。
                 {
                     var msg1 = string.Format("{0}号柜门未关闭，请先关闭...", this.gridNo);
                     this.ShowMessageInfo(msg1, this.greenBrush);
@@ -201,9 +197,8 @@ namespace iCabinet.Comps
                     };
                     t.Start();
                     // 重复检测 END
-
-                    var msg = string.Format("检测到{0}归还请求。", rfID);
-                    Log.WriteLog("INFO-RET：" + msg);
+                    var msg = string.Format("检测到{0}寄存请求。", rfID);
+                    Log.WriteLog("INFO-STR：" + msg);
                     // 查询存放位置
                     this.GetCabinetByID(rfID);
                 }
@@ -216,19 +211,24 @@ namespace iCabinet.Comps
             var msg1 = string.Format("正在获取{0}存放位置信息...", rfID);
             this.ShowMessageInfo(msg1, this.greenBrush);
 
-            var data = await Service.GetSlingGrid(rfID);
-            if (data != null && data[0] != "")
+            var cabinetID = int.Parse(ConfigurationManager.AppSettings["CabinetID"]);
+            var data = await Service.GetAvailableGrid(cabinetID);
+            if (data == 0) // 已满
             {
-                this.gridNo = int.Parse(data[0]);
-                grid2RFID[int.Parse(data[0])] = rfID; // 记录格子对应的设备
-                // 打开柜门
-                OpenCabinet(data[0], data[1]);
+                var msg = "柜子空间已满，没有可用位置！";
+                this.ShowMessageInfo(msg, this.redBrush);
+                Log.WriteLog("ERROR-STR：" + msg);
+            }
+            else if (data > 0) // 正常
+            {
+                this.gridNo = data;
+                OpenCabinet(data.ToString(), cabinetID.ToString());
             }
             else
             {
                 var msg = string.Format("未找到{0}存放位置信息！", rfID);
                 this.ShowMessageInfo(msg, this.redBrush);
-                Log.WriteLog("ERROR-RET：" + msg);
+                Log.WriteLog("ERROR-STR：" + msg);
             }
         }
 
@@ -236,7 +236,7 @@ namespace iCabinet.Comps
         {
             var msg = "智能锁通信失败！请重试。";
             this.ShowMessageInfo(msg, this.redBrush);
-            Log.WriteLog("ERROR-RET：" + msg);
+            Log.WriteLog("ERROR-STR：" + msg);
         }
 
         private void SpCabinet_DataReceived(DataReceivedEventArgs e)
@@ -262,7 +262,7 @@ namespace iCabinet.Comps
                 {
                     var msg = string.Format("{0}号柜门打开失败，请重试！", Convert.ToInt32(temps[2], 16));
                     this.ShowMessageInfo(msg, this.redBrush);
-                    Log.WriteLog("ERROR-RET：" + msg);
+                    Log.WriteLog("ERROR-STR：" + msg);
                 }
             }
             else if (temps.Length > 5 && temps[0] == "80")
@@ -274,15 +274,11 @@ namespace iCabinet.Comps
                 else if (temps[4] == "00")
                 {
                     this.timer.Stop();
-                    var gridNo = Convert.ToInt32(temps[1], 16);
-                    Log.WriteLog(string.Format("INFO-RET：{0}号柜门已关闭！操作人员：{1}", gridNo, this.staffName));
+                    Log.WriteLog(string.Format("INFO-STR：{0}号柜门已关闭！操作人员：{1}", Convert.ToInt32(temps[1], 16), this.staffName));
 
-                    if(grid2RFID.ContainsKey(gridNo))
-                    {
-                        this.ReturnSling(grid2RFID[gridNo]);
-                    }
+                    this.PutSling();
 
-                    var msg = string.Format("{0}号柜门已关闭！", gridNo);
+                    var msg = string.Format("{0}号柜门已关闭！", Convert.ToInt32(temps[1], 16));
                     isOpening = false;
                     this.ShowMessageInfo(msg, this.greenBrush);
                 }
@@ -295,18 +291,25 @@ namespace iCabinet.Comps
             this.tbInfo.Text = msg;
         }
 
-        private async void ReturnSling(string rfID)
+        private async void PutSling()
         {
-            var flag = await Service.ReturnSling(this.staffId, this.staffName, rfID);
-            if (flag)
+            var cabinetID = int.Parse(ConfigurationManager.AppSettings["CabinetID"]);
+            var flag = await Service.PutSling(this.staffId, this.staffName, this.rfID, cabinetID, this.gridNo);
+            if (flag == 0)
             {
-                Log.WriteLog(string.Format("INFO-RET：归还记录入库成功！归还人员：{0}-RFID：{1}", this.staffName, rfID));
-                // 重新获取列表
-                this.GetData();
+                Log.WriteLog(string.Format("INFO-STR：寄存记录入库成功！寄存人员：{0}-RFID：{1}", this.staffName, this.rfID));
+                // 显示到列表
+                this.AddData(this.rfID, this.rfID, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             }
-            else
+            else if (flag == -1)
             {
-                Log.WriteLog(string.Format("ERROR-RET：归还记录入库失败，请检查日志！归还人员：{0}-RFID：{1}", this.staffName, rfID));
+                this.ShowMessageInfo("寄存记录入库失败，请检查日志!", this.redBrush);
+                Log.WriteLog(string.Format("ERROR-STR：寄存记录入库失败，请检查日志！寄存人员：{0}-RFID：{1}", this.staffName, this.rfID));
+            }
+            else if (flag == 1)
+            {
+                this.ShowMessageInfo(string.Format("寄存记录入库失败，RFID重复：{0}", this.rfID), this.redBrush);
+                Log.WriteLog(string.Format("ERROR-STR：寄存记录入库失败，RFID重复：{0}", this.rfID));
             }
         }
 
@@ -334,18 +337,11 @@ namespace iCabinet.Comps
             }
         }
 
-        private async void GetData()
+        private void AddData(string rfID, string name, string createdTime)
         {
-            dataList.Clear();
-
-            var list = await Service.GetBorrowedSlingsByStaff(this.staffId);
-            var index = 1;
-            list.ForEach(item =>
-            {
-                dataList.Add(new ListData() { Index = index++, Data = item });
-            });
+            var index = dataList.Count + 1;
+            dataList.Add(new ListData() { Index = index, Data = new ResSling() { RfID = rfID, ResName = name, CreatedTime = createdTime } });
             this.imgNull.Visibility = dataList.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-            this.loading.Visibility = Visibility.Collapsed;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

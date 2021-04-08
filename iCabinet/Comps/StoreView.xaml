@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="iCabinet.Comps.ReturnView"
+﻿<UserControl x:Class="iCabinet.Comps.StoreView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:iCabinet.Comps"
-             mc:Ignorable="d"  xmlns:ctrls="clr-namespace:iCabinet.Controls"
-             d:DesignHeight="800" d:DesignWidth="800">
+             mc:Ignorable="d" xmlns:ctrls="clr-namespace:iCabinet.Controls"
+             d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <Style x:Key="itemTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"></Setter>
@@ -60,7 +60,7 @@
                     <TextBlock Text="2、系统识别后自动打开柜门；" FontSize="14"></TextBlock>
                     <TextBlock Text="3、放入设备；" FontSize="14"></TextBlock>
                     <TextBlock Text="4、关闭柜门；" FontSize="14"></TextBlock>
-                    <TextBlock Text="5、完成归还。" FontSize="14"></TextBlock>
+                    <TextBlock Text="5、完成寄存。" FontSize="14"></TextBlock>
                 </StackPanel>
             </StackPanel>
             <Rectangle Width="1" Fill="LightGray" HorizontalAlignment="Right"/>
@@ -69,8 +69,7 @@
                     <DataTemplate>
                         <Grid Margin="5,2">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="60"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="30"/>
@@ -85,16 +84,10 @@
                                 <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.RfID}"></TextBlock>
                                 <TextBlock Style="{StaticResource itemTitle}" Text="设备名称"></TextBlock>
                                 <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.ResName}"></TextBlock>
-                                <TextBlock Style="{StaticResource itemTitle}" Text="借用人员"></TextBlock>
-                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.TakeStaffName}"></TextBlock>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
-                                <TextBlock Style="{StaticResource itemTitle}" Text="借出时间"></TextBlock>
-                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.TakeTime}"></TextBlock>
-                                <TextBlock Style="{StaticResource itemTitle}" Text="预还时间"></TextBlock>
-                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.ReturnPlanTime}"></TextBlock>
-                                <TextBlock Style="{StaticResource itemTitle}" Text="已用时长"></TextBlock>
-                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.UsedDuration}"></TextBlock>
+                                <TextBlock Style="{StaticResource itemTitle}" Text="投用时间"></TextBlock>
+                                <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.CreatedTime}"></TextBlock>
+                                <TextBlock Style="{StaticResource itemTitle}" Text="状态"></TextBlock>
+                                <TextBlock Style="{StaticResource itemValue}" Text="已存入" Foreground="#00d35e"></TextBlock>
                             </StackPanel>
                             <Rectangle Height="1" Fill="LightGray" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom"></Rectangle>
                         </Grid>
@@ -102,7 +95,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Image x:Name="imgNull" Visibility="Collapsed" Source="../Images/null.png" Stretch="None" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
-            <ctrls:Loading x:Name="loading" Visibility="Visible" Grid.Column="1" Width="36" Height="36"></ctrls:Loading>
+            <!--<ctrls:Loading x:Name="loading" Visibility="Visible" Grid.Column="1" Width="36" Height="36"></ctrls:Loading>-->
         </Grid>
     </Grid>
 </UserControl>
