@@ -192,6 +192,33 @@ namespace iCabinet.Services
         }
 
 
+        public static async Task<List<object>> GetNewSlingByRFID(string rfId)
+        {
+            var sqlStr = string.Format("SELECT grid_no FROM t_res_cabinet_grid WHERE in_res_id = (SELECT id FROM t_res_sling WHERE rf_id = '{0}' AND deleted_at IS NULL)  AND deleted_at IS NULL", rfId);
+            var list = await PgUtil.QueryAsync(sqlStr);
+
+            return list.Count > 0 ? list[0] : null;
+        }
+
+        public static async Task<int> PutNewSling(int staffId, string staffName, string rfId, int cabinetId, int gridNo)
+        {
+            // 查
+            var newData = await GetSlingIDByRFID(rfId);
+            if (newData == null)
+            {
+                return -2; // 未找到
+            }
+
+            // 位置
+            var curTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            var sqlFormat = "INSERT INTO t_res_cabinet_grid (created_at, updated_at, grid_no, cabinet_id, in_res_id, is_out) VALUES ('{0}', '{1}', {2}, {3}, {4}, 0)";
+            var sqlStr = string.Format(sqlFormat, curTime, curTime, gridNo, cabinetId, newData[0]);
+            var data = await PgUtil.ExecuteAsync(sqlStr);
+            
+            return data ? 0 : -1;
+        }
+
+
         // 1-rfID已存在，0-成功，1-失败
         public static async Task<int> PutSling(int staffId, string staffName, string rfId, int cabinetId, int gridNo)
         {

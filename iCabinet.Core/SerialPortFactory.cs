@@ -46,7 +46,7 @@ namespace iCabinet.Core
 
             //字符转换
             var tempStrs = new List<string>();
-            for(var i = 0; i < tempData.Length; i++)
+            for (var i = 0; i < tempData.Length; i++)
             {
                 tempStrs.Add(tempData[i].ToString("X2"));
             }
@@ -134,21 +134,31 @@ namespace iCabinet.Core
             timer.Start();
         }
 
-        public void WriteStr(string data)
+        public bool WriteStr(string data)
         {
             if (sp != null)
             {
                 if (!sp.IsOpen) sp.Open();
-                
-                sp.Write(data);
+
+                if (sp.IsOpen)
+                {
+                    sp.Write(data);
+                    return true;
+                }
+                else
+                {
+                    Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+                    return false;
+                }
             }
             else
             {
                 Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+                return false;
             }
         }
 
-        public void Write(string data)
+        public bool Write(string data)
         {
             if (sp != null)
             {
@@ -160,37 +170,68 @@ namespace iCabinet.Core
                 {
                     message[i] = Convert.ToByte(Convert.ToInt32(ss[i], 16));
                 }
-                sp.Write(message, 0, message.Length);
+                if (sp.IsOpen)
+                {
+                    sp.Write(message, 0, message.Length);
+                    return true;
+                }
+                else
+                {
+                    Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+                    return false;
+                }
             }
             else
             {
                 Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+                return false;
             }
         }
 
-        public void Write(byte[] message)
+        public bool Write(byte[] message)
         {
             if (sp != null)
             {
                 if (!sp.IsOpen) sp.Open();
-                sp.Write(message, 0, message.Length);
+                if (sp.IsOpen)
+                {
+                    sp.Write(message, 0, message.Length);
+                    return true;
+                }
+                else
+                {
+                    Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+                    return false;
+                }
             }
             else
             {
                 Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+                return false;
             }
         }
 
-        public void Write(byte[] message, int offset, int count)
+        public bool Write(byte[] message, int offset, int count)
         {
             if (sp != null)
             {
                 if (!sp.IsOpen) sp.Open();
-                sp.Write(message, offset, count);
+                if (sp.IsOpen)
+                {
+                    sp.Write(message, offset, count);
+                    return true;
+                }
+                else
+                {
+                    Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+
+                    return false;
+                }
             }
             else
             {
                 Log.WriteLog("ERROR-" + this.config.PortName + "：连接未建立！");
+                return false;
             }
         }
 

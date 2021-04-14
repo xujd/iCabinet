@@ -37,10 +37,10 @@ namespace iCabinet
             timer.Start();
 
             this.tbTitle.Text = ConfigurationManager.AppSettings["SysTitle"];
-            
+
             Log.WriteLog("程序启动。");
         }
-        
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             this.tbTime.Text = DateTime.Now.ToString();
@@ -110,11 +110,31 @@ namespace iCabinet
                 case "Back":
                     if (this.contentGrid.Children.Count > 1)
                     {
-                        (this.contentGrid.Children[1] as ICompView).CleanUp();
-                        this.contentGrid.Children.RemoveAt(1);
+                        if ((this.contentGrid.Children[1] as ICompView).CheckOpen())
+                        {
+                            MessageBoxResult result = System.Windows.MessageBox.Show("存在未关闭的柜门，请确认是否已经全部关闭！", "确认？", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                            //关闭窗口
+                            if (result == MessageBoxResult.OK)
+                            {
+                                (this.contentGrid.Children[1] as ICompView).CleanUp();
+                                this.contentGrid.Children.RemoveAt(1);
+                                this.contentGrid.Visibility = Visibility.Collapsed;
+                                this.actionGrid.Visibility = Visibility.Visible;
+                            }
+                        }
+                        else
+                        {
+                            (this.contentGrid.Children[1] as ICompView).CleanUp();
+                            this.contentGrid.Children.RemoveAt(1);
+                            this.contentGrid.Visibility = Visibility.Collapsed;
+                            this.actionGrid.Visibility = Visibility.Visible;
+                        }
                     }
-                    this.contentGrid.Visibility = Visibility.Collapsed;
-                    this.actionGrid.Visibility = Visibility.Visible;
+                    else
+                    {
+                        this.contentGrid.Visibility = Visibility.Collapsed;
+                        this.actionGrid.Visibility = Visibility.Visible;
+                    }
                     break;
             }
         }

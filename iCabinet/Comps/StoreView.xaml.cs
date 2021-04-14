@@ -36,6 +36,7 @@ namespace iCabinet.Comps
         string staffName = "";
         int staffId = 0;
         string rfID = "";
+        string curRFID = "";
         int gridNo = 0;
         bool isOpening = false;
         SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
@@ -70,7 +71,11 @@ namespace iCabinet.Comps
             spCard.Open(spConfig);
             // 设置读卡器为主动模式
             string msg = "02 06 00 00 00 03 C9 F8";
-            spCard.Write(msg);
+            var flag = spCard.Write(msg);
+            if (!flag)
+            {
+                Log.WriteLog(string.Format("ERROR-STR：主动模式设置失败，{0}", msg));
+            }
 
             spCabinet.DataReceived += SpCabinet_DataReceived;
             spCabinet.Error += SpCabinet_Error;
@@ -84,25 +89,28 @@ namespace iCabinet.Comps
 
         private void FaceIdUtil_FaceSearchCompleted(FaceSearchEventArgs e)
         {
-            if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
+            this.Dispatcher.Invoke(new Action(() =>
             {
-                if (txtAction.Tag.ToString() == "FACE" || contentGrid.Visibility == Visibility.Visible) // 当前不是人脸识别状态
+                if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
                 {
-                    return;
+                    if (txtAction.Tag.ToString() == "FACE" || contentGrid.Visibility == Visibility.Visible) // 当前不是人脸识别状态
+                    {
+                        return;
+                    }
+                    var id = -1;
+                    if (!int.TryParse(e.data[0].Name, out id))
+                    {
+                        Log.WriteLog(string.Format("ERROR-BOW：人脸识别成功，但照片命名规则错误--{0}。", e.data[0].Name));
+                        return;
+                    }
+                    if (this.staffId != id)
+                    {
+                        this.staffId = id;
+                        Log.WriteLog(string.Format("INFO-BOW：人脸识别成功，匹配人员-{0}，相似度-{1}。", this.staffName, e.data[0].Similarity));
+                        this.GetStaffData(id, true);
+                    }
                 }
-                var id = -1;
-                if (!int.TryParse(e.data[0].Name, out id))
-                {
-                    Log.WriteLog(string.Format("ERROR-BOW：人脸识别成功，但照片命名规则错误--{0}。", e.data[0].Name));
-                    return;
-                }
-                if (this.staffId != id)
-                {
-                    this.staffId = id;
-                    Log.WriteLog(string.Format("INFO-BOW：人脸识别成功，匹配人员-{0}，相似度-{1}。", this.staffName, e.data[0].Similarity));
-                    this.GetStaffData(id, true);
-                }
-            }
+            }));
         }
 
         private async void GetStaffData(int id, bool isFaceID)
@@ -110,30 +118,32 @@ namespace iCabinet.Comps
             // 获取员工名字
             this.staffName = await Service.GetStaffName(id);
 
-            this.Dispatcher.Invoke(new Action(() =>
+            this.txtStaffID.IsEnabled = true;
+            if (string.IsNullOrEmpty(this.staffName))
             {
-                this.txtStaffID.IsEnabled = true;
-                if (string.IsNullOrEmpty(this.staffName))
-                {
-                    this.tbFaceError.Text = "员工未登记，请联系管理员！";
-                    return;
-                }
-                if (this.imgPhoto.Source != null)
-                {
-                    (this.imgPhoto.Source as BitmapImage).UriSource = null;
-                    this.imgPhoto.Source = null;
-                }
-                this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
-                this.imgPhoto.Source = BmpUtil.GetBitmapImage(isFaceID ? "pack://siteoforigin:,,,/model.jpg" : "pack://application:,,,/Images/person.png");
+                this.tbFaceError.Text = "员工未登记，请联系管理员！";
+                return;
+            }
+            if (this.imgPhoto.Source != null)
+            {
+                (this.imgPhoto.Source as BitmapImage).UriSource = null;
+                this.imgPhoto.Source = null;
+            }
+            this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
+            this.imgPhoto.Source = BmpUtil.GetBitmapImage(isFaceID ? "pack://siteoforigin:,,,/model.jpg" : "pack://application:,,,/Images/person.png");
 
-                this.contentGrid.Visibility = Visibility.Visible;
-                this.faceGrid.Visibility = Visibility.Collapsed;
-            }));
+            this.contentGrid.Visibility = Visibility.Visible;
+            this.faceGrid.Visibility = Visibility.Collapsed;
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
             this.spCabinet.Write(timer.Tag.ToString()); // 开：80 01 00 00 01 33 B3, 关：80 01 00 00 00 33 B2
+        }
+
+        public bool CheckOpen()
+        {
+            return this.isOpening;
         }
 
         public void CleanUp()
@@ -167,7 +177,7 @@ namespace iCabinet.Comps
             }
             else
             {
-                if(isOpening) // 柜门未关闭。
+                if (isOpening) // 柜门未关闭。
                 {
                     var msg1 = string.Format("{0}号柜门未关闭，请先关闭...", this.gridNo);
                     this.ShowMessageInfo(msg1, this.greenBrush);
@@ -178,14 +188,14 @@ namespace iCabinet.Comps
                 {
                     var rfID = "086" + Convert.ToInt64(string.Join("", e.data.Split(' ').Skip(5).Take(5)), 16).ToString().PadLeft(12, '0');
                     // 重复检测 START
-                    if(this.rfID == rfID)
+                    if (this.curRFID == rfID)
                     {
                         var msg1 = string.Format("检测到{0}的5秒内归还重复请求。", rfID);
                         Log.WriteLog("INFO-RET：" + msg1);
                         return;
                     }
 
-                    this.rfID = rfID;
+                    this.rfID = this.curRFID = rfID;
                     DispatcherTimer t = new DispatcherTimer();
                     t.Interval = TimeSpan.FromSeconds(5);
                     EventHandler handler = null;
@@ -193,7 +203,7 @@ namespace iCabinet.Comps
                     {
                         t.Tick -= handler;
                         t.Stop();
-                        this.rfID = "";
+                        this.curRFID = "";
                     };
                     t.Start();
                     // 重复检测 END
@@ -207,6 +217,23 @@ namespace iCabinet.Comps
 
         private async void GetCabinetByID(string rfID)
         {
+            var flag = await Service.GetSlingIDByRFID(rfID);
+            if (flag == null)
+            {
+                var msg = string.Format("{0}设备未登记，请先在系统中登记！", rfID);
+                this.ShowMessageInfo(msg, this.redBrush);
+                Log.WriteLog("ERROR-STR：" + msg);
+                return;
+            }
+
+            flag = await Service.GetNewSlingByRFID(rfID);
+            if(flag != null)
+            {
+                var msg = string.Format("{0}设备已入库，请走归还流程！", rfID);
+                this.ShowMessageInfo(msg, this.redBrush);
+                Log.WriteLog("ERROR-STR：" + msg);
+                return;
+            }
             this.gridNo = 0;
             var msg1 = string.Format("正在获取{0}存放位置信息...", rfID);
             this.ShowMessageInfo(msg1, this.greenBrush);
@@ -274,11 +301,11 @@ namespace iCabinet.Comps
                 else if (temps[4] == "00")
                 {
                     this.timer.Stop();
-                    Log.WriteLog(string.Format("INFO-STR：{0}号柜门已关闭！操作人员：{1}", Convert.ToInt32(temps[1], 16), this.staffName));
+                    Log.WriteLog(string.Format("INFO-STR：{0}号柜门已关闭！操作人员：{1}", this.gridNo, this.staffName));
 
                     this.PutSling();
 
-                    var msg = string.Format("{0}号柜门已关闭！", Convert.ToInt32(temps[1], 16));
+                    var msg = string.Format("{0}号柜门已关闭！", this.gridNo);
                     isOpening = false;
                     this.ShowMessageInfo(msg, this.greenBrush);
                 }
@@ -294,7 +321,7 @@ namespace iCabinet.Comps
         private async void PutSling()
         {
             var cabinetID = int.Parse(ConfigurationManager.AppSettings["CabinetID"]);
-            var flag = await Service.PutSling(this.staffId, this.staffName, this.rfID, cabinetID, this.gridNo);
+            var flag = await Service.PutNewSling(this.staffId, this.staffName, this.rfID, cabinetID, this.gridNo);
             if (flag == 0)
             {
                 Log.WriteLog(string.Format("INFO-STR：寄存记录入库成功！寄存人员：{0}-RFID：{1}", this.staffName, this.rfID));
@@ -306,10 +333,10 @@ namespace iCabinet.Comps
                 this.ShowMessageInfo("寄存记录入库失败，请检查日志!", this.redBrush);
                 Log.WriteLog(string.Format("ERROR-STR：寄存记录入库失败，请检查日志！寄存人员：{0}-RFID：{1}", this.staffName, this.rfID));
             }
-            else if (flag == 1)
+            else if (flag == 2)
             {
-                this.ShowMessageInfo(string.Format("寄存记录入库失败，RFID重复：{0}", this.rfID), this.redBrush);
-                Log.WriteLog(string.Format("ERROR-STR：寄存记录入库失败，RFID重复：{0}", this.rfID));
+                this.ShowMessageInfo(string.Format("寄存记录入库失败，设备记录未找到，RFID：{0}", this.rfID), this.redBrush);
+                Log.WriteLog(string.Format("ERROR-STR：寄存记录入库失败，设备记录未找到，RFID：{0}", this.rfID));
             }
         }
 
@@ -319,7 +346,12 @@ namespace iCabinet.Comps
             if (spCabinet.IsOpen) // 已打开，直接发送消息
             {
                 var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(cabinetGrid).ToString("X2"));
-                spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                var flag = spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+
+                if (!flag)
+                {
+                    Log.WriteLog(string.Format("ERROR-STR：开锁消息发送失败，{0}", msg));
+                }
             }
             else // 未打开，先打开端口
             {
@@ -333,7 +365,11 @@ namespace iCabinet.Comps
                 spCabinet.Open(spConfig);
                 // 发开锁消息
                 var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(cabinetGrid).ToString("X2"));
-                spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                var flag = spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                if (!flag)
+                {
+                    Log.WriteLog(string.Format("ERROR-STR：开锁消息发送失败，{0}", msg));
+                }
             }
         }
 

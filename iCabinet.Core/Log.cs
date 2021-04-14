@@ -46,7 +46,7 @@ namespace iCabinet.Core
                 LogList.Insert(0, log);
                 if (LogList.Count > 150)//保留最新100条记录
                 {
-                    LogList.RemoveRange(100, 60);
+                    LogList.RemoveRange(100, 40);
                 }
             }
             catch (Exception e)

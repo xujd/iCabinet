@@ -27,12 +27,14 @@ namespace iCabinet.Comps
         SolidColorBrush greenBrush = new SolidColorBrush(Colors.Green);
         DispatcherTimer timer = new DispatcherTimer();
         ResSling curSling = null;
+        string gridNo = "";
+        bool isOpening = false;
 
         FaceIDUtil faceIdUtil = null;
         public BorrowView()
         {
             InitializeComponent();
-            
+
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1);
 
@@ -65,59 +67,63 @@ namespace iCabinet.Comps
 
         private void FaceIdUtil_FaceSearchCompleted(FaceSearchEventArgs e)
         {
-            if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
+            this.Dispatcher.Invoke(new Action(() =>
             {
-                if (txtAction.Tag.ToString() == "FACE" || contentGrid.Visibility == Visibility.Visible) // 当前不是人脸识别状态
+                if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
                 {
-                    return;
+                    if (txtAction.Tag.ToString() == "FACE" || contentGrid.Visibility == Visibility.Visible) // 当前不是人脸识别状态
+                    {
+                        return;
+                    }
+                    var id = -1;
+                    if (!int.TryParse(e.data[0].Name, out id))
+                    {
+                        Log.WriteLog(string.Format("ERROR-BOW：人脸识别成功，但照片命名规则错误--{0}。", e.data[0].Name));
+                        return;
+                    }
+                    if (this.staffId != id)
+                    {
+                        this.staffId = id;
+                        Log.WriteLog(string.Format("INFO-BOW：人脸识别成功，匹配人员-{0}，相似度-{1}。", this.staffName, e.data[0].Similarity));
+                        this.GetStaffData(id, true);
+                    }
                 }
-                var id = -1;
-                if(!int.TryParse(e.data[0].Name, out id))
-                {
-                    Log.WriteLog(string.Format("ERROR-BOW：人脸识别成功，但照片命名规则错误--{0}。", e.data[0].Name));
-                    return;
-                }
-                if(this.staffId != id)
-                {
-                    this.staffId = id;
-                    Log.WriteLog(string.Format("INFO-BOW：人脸识别成功，匹配人员-{0}，相似度-{1}。", this.staffName, e.data[0].Similarity));
-                    this.GetStaffData(id, true);
-                }
-            }
+
+            }));
         }
 
         private async void GetStaffData(int id, bool isFaceID)
         {
             // 获取员工名字
             this.staffName = await Service.GetStaffName(id);
-            this.Dispatcher.Invoke(new Action(() =>
+            this.txtStaffID.IsEnabled = true;
+            if (string.IsNullOrEmpty(this.staffName))
             {
-                this.txtStaffID.IsEnabled = true;
-                if (string.IsNullOrEmpty(this.staffName))
-                {
-                    this.tbFaceError.Text = "员工未登记，请联系管理员！";
-                    return;
-                }
-                if (this.imgPhoto.Source != null)
-                {
-                    (this.imgPhoto.Source as BitmapImage).UriSource = null;
-                    this.imgPhoto.Source = null;
-                }
-                this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
-                this.imgPhoto.Source = BmpUtil.GetBitmapImage(isFaceID ? "pack://siteoforigin:,,,/model.jpg" : "pack://application:,,,/Images/person.png");
+                this.tbFaceError.Text = "员工未登记，请联系管理员！";
+                return;
+            }
+            if (this.imgPhoto.Source != null)
+            {
+                (this.imgPhoto.Source as BitmapImage).UriSource = null;
+                this.imgPhoto.Source = null;
+            }
+            this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
+            this.imgPhoto.Source = BmpUtil.GetBitmapImage(isFaceID ? "pack://siteoforigin:,,,/model.jpg" : "pack://application:,,,/Images/person.png");
 
-                this.contentGrid.Visibility = Visibility.Visible;
-                this.faceGrid.Visibility = Visibility.Collapsed;
-                // 查询用户数据
-                this.GetData();
-            }));
+            this.contentGrid.Visibility = Visibility.Visible;
+            this.faceGrid.Visibility = Visibility.Collapsed;
+            // 查询用户数据
+            this.GetData();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
             this.spCabinet.Write(timer.Tag.ToString()); // 开：80 01 00 00 01 33 B3, 关：80 01 00 00 00 33 B2
         }
-
+        public bool CheckOpen()
+        {
+            return this.isOpening;
+        }
         public void CleanUp()
         {
             this.spCabinet.Close();
@@ -144,6 +150,7 @@ namespace iCabinet.Comps
             {
                 if (temps[3] == "11")
                 {
+                    this.isOpening = true;
                     var msginfo = string.Format("{0}号柜门已打开！请取走设备，并关闭柜门。", Convert.ToInt32(temps[2], 16));
                     this.ShowMessageInfo(msginfo, this.greenBrush);
                     Log.WriteLog("INFO-BOW：" + msginfo);
@@ -173,9 +180,10 @@ namespace iCabinet.Comps
                 }
                 else if (temps[4] == "00")
                 {
+                    this.isOpening = false;
                     timer.Stop();
-                    Log.WriteLog(string.Format("INFO-BOW：{0}号柜门已关闭！操作人员：{1}", Convert.ToInt32(temps[1], 16), this.staffName));
-                    var msg = string.Format("{0}号柜门已关闭！", Convert.ToInt32(temps[1], 16));
+                    Log.WriteLog(string.Format("INFO-BOW：{0}号柜门已关闭！操作人员：{1}", this.gridNo, this.staffName));
+                    var msg = string.Format("{0}号柜门已关闭！", this.gridNo);
                     this.ShowMessageInfo(msg, this.greenBrush);
                 }
             }
@@ -224,12 +232,17 @@ namespace iCabinet.Comps
             var resSling = ((sender as FrameworkElement).Tag as ListData).Data as ResSling;
             this.curSling = resSling;
             this.tbInfo.Text = "";
+            this.gridNo = resSling.CabinetGrid;
 
             // 发送开锁信号，通知柜门开锁
             if (spCabinet.IsOpen) // 已打开，直接发送消息
             {
                 var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(resSling.CabinetGrid).ToString("X2"));
-                spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                var flag = spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                if (!flag)
+                {
+                    Log.WriteLog(string.Format("ERROR-BOM：开锁消息发送失败，{0}", msg));
+                }
             }
             else // 未打开，先打开端口
             {
@@ -241,13 +254,17 @@ namespace iCabinet.Comps
                 spConfig.StopBits = System.IO.Ports.StopBits.One; // 停止位
                 // 打开
                 string err = "";
-                if((err = spCabinet.Open(spConfig)) != "")
+                if ((err = spCabinet.Open(spConfig)) != "")
                 {
                     this.ShowMessageInfo(err, this.redBrush);
                 }
                 // 发开锁消息
                 var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(resSling.CabinetGrid).ToString("X2"));
-                spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                var flag = spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                if (!flag)
+                {
+                    Log.WriteLog(string.Format("ERROR-BOM：开锁消息发送失败，{0}", msg));
+                }
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)

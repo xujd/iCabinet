@@ -9,5 +9,7 @@ namespace iCabinet.Comps
     public interface ICompView
     {
         void CleanUp();
+
+        bool CheckOpen();
     }
 }
