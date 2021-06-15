@@ -62,15 +62,17 @@ namespace iCabinet
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //this.WindowState = System.Windows.WindowState.Normal;
-            //this.WindowStyle = System.Windows.WindowStyle.None;
-            //this.ResizeMode = System.Windows.ResizeMode.NoResize;
-            //this.Topmost = true;
+#if !DEBUG
+            this.WindowState = System.Windows.WindowState.Normal;
+            this.WindowStyle = System.Windows.WindowStyle.None;
+            this.ResizeMode = System.Windows.ResizeMode.NoResize;
+            this.Topmost = true;
 
-            //this.Left = 0.0;
-            //this.Top = 0.0;
-            //this.Width = System.Windows.SystemParameters.PrimaryScreenWidth;
-            //this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
+            this.Left = 0.0;
+            this.Top = 0.0;
+            this.Width = System.Windows.SystemParameters.PrimaryScreenWidth;
+            this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
+#endif
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -135,6 +137,9 @@ namespace iCabinet
                         this.contentGrid.Visibility = Visibility.Collapsed;
                         this.actionGrid.Visibility = Visibility.Visible;
                     }
+                    break;
+                default:
+                    MessageBox.Show("功能未开放。", "提示");
                     break;
             }
         }

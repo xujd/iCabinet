@@ -40,7 +40,7 @@ namespace iCabinet.Comps
         int gridNo = 0;
         bool isOpening = false;
         SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
-        SolidColorBrush greenBrush = new SolidColorBrush(Colors.Green);
+        SolidColorBrush greenBrush = new SolidColorBrush(Colors.LightGreen);
 
         FaceIDUtil faceIdUtil = null;
 
@@ -49,6 +49,8 @@ namespace iCabinet.Comps
             InitializeComponent();
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1);
+
+            txtStaffID.AddHandler(TextBox.MouseLeftButtonDownEvent, new MouseButtonEventHandler(txtStaffID_MouseLeftButtonDown), true);
 
             faceIdUtil = new FaceIDUtil();
             faceIdUtil.FaceSearchCompleted += FaceIdUtil_FaceSearchCompleted;
@@ -91,7 +93,7 @@ namespace iCabinet.Comps
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
-                if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
+                if (e.data.Count > 0 && e.data[0].Similarity > 0.6) // 识别成功
                 {
                     if (txtAction.Tag.ToString() == "FACE" || contentGrid.Visibility == Visibility.Visible) // 当前不是人脸识别状态
                     {
@@ -148,6 +150,10 @@ namespace iCabinet.Comps
 
         public void CleanUp()
         {
+            txtStaffID.RemoveHandler(TextBox.MouseLeftButtonDownEvent, (MouseButtonEventHandler)txtStaffID_MouseLeftButtonDown);
+
+            this.faceIdUtil.Destroy();
+
             this.spCard.Close();
             spCard.DataReceived -= spCard_DataReceived;
             spCard.Error -= spCard_Error;
@@ -159,7 +165,6 @@ namespace iCabinet.Comps
             timer.Stop();
             timer.Tick -= Timer_Tick;
 
-            this.faceIdUtil.Destroy();
         }
 
         private void spCard_Error(object sender, System.IO.Ports.SerialErrorReceivedEventArgs e)
@@ -361,14 +366,23 @@ namespace iCabinet.Comps
                 spConfig.Parity = System.IO.Ports.Parity.None; // 偶校验位
                 spConfig.DataBits = 8;
                 spConfig.StopBits = System.IO.Ports.StopBits.One; // 停止位
-                // 打开
-                spCabinet.Open(spConfig);
-                // 发开锁消息
-                var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(cabinetGrid).ToString("X2"));
-                var flag = spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
-                if (!flag)
+                
+                try
                 {
-                    Log.WriteLog(string.Format("ERROR-STR：开锁消息发送失败，{0}", msg));
+                    // 打开
+                    spCabinet.Open(spConfig);
+                    // 发开锁消息
+                    var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(cabinetGrid).ToString("X2"));
+                    var flag = spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                    if (!flag)
+                    {
+                        Log.WriteLog(string.Format("ERROR-STR：开锁消息发送失败，{0}", msg));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.ShowMessageInfo("开锁失败，请重试！", this.redBrush);
+                    Log.WriteLog(string.Format("ERROR-STR：开锁失败，失败信息：{0}", ex.Message));
                 }
             }
         }
@@ -414,6 +428,16 @@ namespace iCabinet.Comps
                 this.faceAni.Visibility = Visibility.Visible;
                 this.spIdLogin.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void txtStaffID_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TabTipUtil.Close();
+        }
+
+        private void txtStaffID_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            TabTipUtil.Open();
         }
     }
 }

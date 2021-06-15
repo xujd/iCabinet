@@ -16,6 +16,12 @@
         <Style x:Key="itemValue" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"></Setter>
             <Setter Property="Width" Value="130"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="Margin" Value="11,0,0,0"></Setter>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -24,11 +30,11 @@
                 <ctrls:FaceAni x:Name="faceAni"></ctrls:FaceAni>
                 <StackPanel Orientation="Horizontal" x:Name="spIdLogin" Visibility="Collapsed">
                     <TextBlock Text="工号" FontSize="20" VerticalAlignment="Center"></TextBlock>
-                    <TextBox x:Name="txtStaffID" Width="320" Height="50" FontSize="20" Margin="11,0,0,0" Padding="0,11,0,0" Text=""></TextBox>
+                    <TextBox x:Name="txtStaffID" LostFocus="txtStaffID_LostFocus" Width="320" Height="50" FontSize="20" Margin="11,0,0,0" Padding="0,11,0,0" Text=""></TextBox>
                     <Button Margin="11,0,0,0" Background="#FFEAF4F7" Width="160" Height="50" Click="Button_Click">
                         <StackPanel>
                             <Image Source="../Images/people.png" Width="20" Height="20"></Image>
-                            <TextBlock VerticalAlignment="Center">登录</TextBlock>
+                            <TextBlock VerticalAlignment="Center" Foreground="Black">登录</TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -63,8 +69,9 @@
                     <TextBlock Text="5、完成归还。" FontSize="14"></TextBlock>
                 </StackPanel>
             </StackPanel>
-            <Rectangle Width="1" Fill="LightGray" HorizontalAlignment="Right"/>
-            <ListBox x:Name="listBox" BorderThickness="0" Grid.Column="1" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+            <Rectangle Width="1" Fill="#66d3d3d3" HorizontalAlignment="Right"/>
+            <ListBox x:Name="listBox" BorderThickness="0" Background="Transparent"
+                     Grid.Column="1" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="5,2">
@@ -96,7 +103,7 @@
                                 <TextBlock Style="{StaticResource itemTitle}" Text="已用时长"></TextBlock>
                                 <TextBlock Style="{StaticResource itemValue}" Text="{Binding Data.UsedDuration}"></TextBlock>
                             </StackPanel>
-                            <Rectangle Height="1" Fill="LightGray" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom"></Rectangle>
+                            <Rectangle Height="1" Fill="#66d3d3d3" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom"></Rectangle>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

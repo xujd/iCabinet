@@ -5,21 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iCabinet"
         mc:Ignorable="d" Icon="./favicon.ico"
-        Title="iCabinet" Height="350" Width="625">
+        Title="iCabinet" Height="600" Width="800" Background="#133B80">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="11,0"></Setter>
             <Setter Property="BorderThickness" Value="0"></Setter>
         </Style>
         <Style x:Key="btnIcon" TargetType="Image">
-            <Setter Property="Height" Value="36"></Setter>
-            <Setter Property="Width" Value="36"></Setter>
+            <Setter Property="Height" Value="48"></Setter>
+            <Setter Property="Width" Value="48"></Setter>
         </Style>
         <Style TargetType="StackPanel">
             <Setter Property="Orientation" Value="Horizontal"></Setter>
         </Style>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
             <Setter Property="Margin" Value="11,0,0,0"></Setter>
         </Style>
         <Style TargetType="DataGrid">
@@ -107,6 +108,25 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <ControlTemplate x:Key="ButtonBaseControlTemplate1" TargetType="{x:Type ButtonBase}">
+            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="Button.IsDefaulted" Value="True">
+                    <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                </Trigger>
+                <Trigger Property="ToggleButton.IsChecked" Value="True">
+                    <Setter Property="Background" TargetName="border" Value="#FFBCDDEE"/>
+                    <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" TargetName="border" Value="#FFF4F4F4"/>
+                    <Setter Property="BorderBrush" TargetName="border" Value="#FFADB2B5"/>
+                    <Setter Property="Foreground" Value="#FF838383"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
         <!--<SolidColorBrush x:Key="backBrush" Color="#00d360">
         </SolidColorBrush>-->
     </Window.Resources>
@@ -115,7 +135,8 @@
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid x:Name="headerGrid" Background="#1296db">
+        <Image Source="./Images/bg.jpg" Stretch="Fill" Grid.RowSpan="2"></Image>
+        <Grid x:Name="headerGrid">
             <TextBlock x:Name="tbTitle" Foreground="White" Text="" VerticalAlignment="Center"></TextBlock>
             <TextBlock x:Name="tbTime" Foreground="White" Margin="0,0,10,0" TextAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
         </Grid>
@@ -135,37 +156,49 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Rectangle Fill="#B2DFF9DF" Margin="20"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Column="1" Grid.ColumnSpan="3"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Column="4"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Column="5"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1" Grid.Column="1"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1" Grid.Column="4"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="1" Grid.Column="5"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3" Grid.Column="1"></Rectangle>
-                <Rectangle Fill="#99FFF3D8" Margin="20" Grid.Row="3" Grid.Column="2"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3" Grid.Column="3"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3" Grid.Column="4"></Rectangle>
-                <Rectangle Fill="#99F0F8FF" Margin="20" Grid.Row="3" Grid.Column="5"></Rectangle>
-                <Button Tag="Store" Background="#ffdf81" Click="Button_Click" Grid.Row="2" Grid.ColumnSpan="2" Margin="20">
-                    <StackPanel>
-                        <Image Style="{StaticResource btnIcon}" Source="./Images/store.png"></Image>
-                        <TextBlock VerticalAlignment="Center" FontSize="20">寄存</TextBlock>
-                    </StackPanel>
-                </Button>
-                <Button Tag="Borrow" Background="#B2DDFF84" Click="Button_Click" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="20">
+                <Rectangle Fill="#22DFF9DF" Margin="20"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Column="1" Grid.ColumnSpan="3"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Column="4"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Column="5"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="1"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="1" Grid.Column="1"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="1" Grid.Column="4"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="1" Grid.Column="5"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="3"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="3" Grid.Column="1"></Rectangle>
+                <Rectangle Fill="#22FFF3D8" Margin="20" Grid.Row="3" Grid.Column="2"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="3" Grid.Column="3"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="3" Grid.Column="4"></Rectangle>
+                <Rectangle Fill="#22F0F8FF" Margin="20" Grid.Row="3" Grid.Column="5"></Rectangle>
+                <Button Tag="Borrow" Background="#FF00D35E" Click="Button_Click" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="20" Template="{DynamicResource ButtonBaseControlTemplate1}">
                     <StackPanel>
                         <Image Style="{StaticResource btnIcon}" Source="./Images/borrow.png"></Image>
-                        <TextBlock VerticalAlignment="Center" FontSize="20">借用</TextBlock>
+                        <TextBlock VerticalAlignment="Center" Foreground="#ffdf81" FontSize="50">借用</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Tag="Return" Background="#B290EE90" Click="Button_Click" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" Margin="20">
+                <Button Tag="Return" Background="#FF7A35FA" Click="Button_Click" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Margin="20" Template="{DynamicResource ButtonBaseControlTemplate1}">
                     <StackPanel>
                         <Image Style="{StaticResource btnIcon}" Source="./Images/return.png"></Image>
-                        <TextBlock VerticalAlignment="Center" FontSize="20">归还</TextBlock>
+                        <TextBlock VerticalAlignment="Center" Foreground="#ffdf81" FontSize="50">归还</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Tag="Store" Background="#12DB92" Click="Button_Click" Grid.Row="3" Grid.Column="3" Margin="20" Template="{DynamicResource ButtonBaseControlTemplate1}">
+                    <StackPanel>
+                        <Image Style="{StaticResource btnIcon}" Source="./Images/store.png"></Image>
+                        <TextBlock VerticalAlignment="Center" Foreground="#ffdf81" FontSize="20">寄存</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Tag="Check" Background="Transparent" Click="Button_Click" Grid.Row="3" Grid.Column="4" Margin="20" Template="{DynamicResource ButtonBaseControlTemplate1}">
+                    <StackPanel>
+                        <Image Style="{StaticResource btnIcon}" Source="./Images/check.png"></Image>
+                        <TextBlock VerticalAlignment="Center" Foreground="Gray" FontSize="20">巡检</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Tag="Detection" Background="Transparent" Click="Button_Click" Grid.Row="3" Grid.Column="5" Margin="20" Template="{DynamicResource ButtonBaseControlTemplate1}">
+                    <StackPanel>
+                        <Image Style="{StaticResource btnIcon}" Source="./Images/detection.png"></Image>
+                        <TextBlock VerticalAlignment="Center" Foreground="Gray" FontSize="20">探伤</TextBlock>
                     </StackPanel>
                 </Button>
             </Grid>
@@ -179,7 +212,7 @@
             <Button Tag="Back" Background="#FFEAF4F7" Height="50" Width="160" Click="Button_Click" Grid.Row="1">
                 <StackPanel>
                     <Image Style="{StaticResource btnIcon}" Source="./Images/back.png"></Image>
-                    <TextBlock VerticalAlignment="Center">返回</TextBlock>
+                    <TextBlock VerticalAlignment="Center" Foreground="Black">返回</TextBlock>
                 </StackPanel>
             </Button>
         </Grid>

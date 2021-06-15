@@ -24,7 +24,7 @@ namespace iCabinet.Comps
         string staffName = "";
         int staffId = 0;
         SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
-        SolidColorBrush greenBrush = new SolidColorBrush(Colors.Green);
+        SolidColorBrush greenBrush = new SolidColorBrush(Colors.LightGreen);
         DispatcherTimer timer = new DispatcherTimer();
         ResSling curSling = null;
         string gridNo = "";
@@ -34,6 +34,8 @@ namespace iCabinet.Comps
         public BorrowView()
         {
             InitializeComponent();
+
+            txtStaffID.AddHandler(TextBox.MouseLeftButtonDownEvent, new MouseButtonEventHandler(txtStaffID_MouseLeftButtonDown), true);
 
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1);
@@ -69,7 +71,7 @@ namespace iCabinet.Comps
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
-                if (e.data.Count > 0 && e.data[0].Similarity > 0.8) // 识别成功
+                if (e.data.Count > 0 && e.data[0].Similarity > 0.6) // 识别成功
                 {
                     if (txtAction.Tag.ToString() == "FACE" || contentGrid.Visibility == Visibility.Visible) // 当前不是人脸识别状态
                     {
@@ -126,6 +128,10 @@ namespace iCabinet.Comps
         }
         public void CleanUp()
         {
+            txtStaffID.RemoveHandler(TextBox.MouseLeftButtonDownEvent, (MouseButtonEventHandler)txtStaffID_MouseLeftButtonDown);
+
+            this.faceIdUtil.Destroy();
+
             this.spCabinet.Close();
             spCabinet.DataReceived -= SpFactory_DataReceived;
             spCabinet.Error -= SpFactory_Error;
@@ -133,7 +139,6 @@ namespace iCabinet.Comps
             timer.Stop();
             timer.Tick -= Timer_Tick;
 
-            this.faceIdUtil.Destroy();
         }
 
         private void SpFactory_Error(object sender, System.IO.Ports.SerialErrorReceivedEventArgs e)
@@ -252,18 +257,27 @@ namespace iCabinet.Comps
                 spConfig.Parity = System.IO.Ports.Parity.None; // 偶校验位
                 spConfig.DataBits = 8;
                 spConfig.StopBits = System.IO.Ports.StopBits.One; // 停止位
-                // 打开
-                string err = "";
-                if ((err = spCabinet.Open(spConfig)) != "")
+                
+                try
                 {
-                    this.ShowMessageInfo(err, this.redBrush);
+                    // 打开
+                    string err = "";
+                    if ((err = spCabinet.Open(spConfig)) != "")
+                    {
+                        this.ShowMessageInfo(err, this.redBrush);
+                    }
+                    // 发开锁消息
+                    var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(resSling.CabinetGrid).ToString("X2"));
+                    var flag = spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
+                    if (!flag)
+                    {
+                        Log.WriteLog(string.Format("ERROR-BOM：开锁消息发送失败，{0}", msg));
+                    }
                 }
-                // 发开锁消息
-                var msg = string.Format("8A 01 {0} 11", Convert.ToInt32(resSling.CabinetGrid).ToString("X2"));
-                var flag = spCabinet.Write(string.Format("{0} {1}", msg, BCC.CheckXOR(msg)));
-                if (!flag)
+                catch (Exception ex)
                 {
-                    Log.WriteLog(string.Format("ERROR-BOM：开锁消息发送失败，{0}", msg));
+                    this.ShowMessageInfo("开锁失败，请重试！", this.redBrush);
+                    Log.WriteLog(string.Format("ERROR-BOM：开锁失败，失败信息：{0}", ex.Message));
                 }
             }
         }
@@ -301,6 +315,16 @@ namespace iCabinet.Comps
                 this.faceAni.Visibility = Visibility.Visible;
                 this.spIdLogin.Visibility = Visibility.Collapsed;
             }
+        }
+        
+        private void txtStaffID_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TabTipUtil.Close();
+        }
+
+        private void txtStaffID_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            TabTipUtil.Open();
         }
     }
 }
