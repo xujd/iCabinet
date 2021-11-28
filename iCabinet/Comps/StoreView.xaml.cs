@@ -297,13 +297,13 @@ namespace iCabinet.Comps
                     Log.WriteLog("ERROR-STR：" + msg);
                 }
             }
-            else if (temps.Length > 5 && temps[0] == "80")
+            else if (temps.Length > 4 && temps[0] == "80")
             {
-                if (temps[4] == "01")
+                if (temps[3] == "01")
                 {
                     // MessageBox.Show(string.Format("{0}号柜门已打开！", Convert.ToInt32(temps[1], 16)));
                 }
-                else if (temps[4] == "00")
+                else if (temps[3] == "00")
                 {
                     this.timer.Stop();
                     Log.WriteLog(string.Format("INFO-STR：{0}号柜门已关闭！操作人员：{1}", this.gridNo, this.staffName));

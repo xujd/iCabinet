@@ -85,7 +85,7 @@ namespace iCabinet.Services
             string[] data = null;
 
             var sqlStr = "SELECT grid_no, cabinet_id FROM t_res_cabinet_grid " +
-                         string.Format("WHERE in_res_id = (SELECT id FROM t_res_sling WHERE rf_id = '{0}') AND cabinet_id = {1} AND deleted_at IS NULL ", rfId, cabinetID);
+                         string.Format("WHERE in_res_id = (SELECT id FROM t_res_sling WHERE rf_id = '{0}' AND deleted_at IS NULL) AND cabinet_id = {1} AND deleted_at IS NULL ", rfId, cabinetID);
             var list = await PgUtil.QueryAsync(sqlStr);
             if (list.Count > 0)
             {
@@ -110,7 +110,7 @@ namespace iCabinet.Services
             sqlList.Add(sqlStr);
 
             sqlStr = "UPDATE t_res_cabinet_grid SET is_out = 0 " +
-                string.Format("WHERE in_res_id = (SELECT id FROM t_res_sling WHERE rf_id = '{0}') AND cabinet_id = {1}", rfId, cabinetID);
+                string.Format("WHERE in_res_id = (SELECT id FROM t_res_sling WHERE rf_id = '{0}' AND deleted_at IS NULL) AND cabinet_id = {1}", rfId, cabinetID);
             // data = await PgUtil.ExecuteAsync(sqlStr);
             sqlList.Add(sqlStr);
 
