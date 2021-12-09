@@ -109,6 +109,7 @@ namespace iCabinet.Comps
                 (this.imgPhoto.Source as BitmapImage).UriSource = null;
                 this.imgPhoto.Source = null;
             }
+            OskUtil.Close();
             this.tbHello.Text = string.Format("你好，{0}！", this.staffName);
             this.imgPhoto.Source = BmpUtil.GetBitmapImage(isFaceID ? "pack://siteoforigin:,,,/model.jpg" : "pack://application:,,,/Images/person.png");
 
@@ -138,6 +139,9 @@ namespace iCabinet.Comps
 
             timer.Stop();
             timer.Tick -= Timer_Tick;
+
+            this.txtStaffID.KeyUp -= txtStaffID_KeyUp;
+            this.txtStaffID.LostFocus-= txtStaffID_LostFocus;
 
         }
 

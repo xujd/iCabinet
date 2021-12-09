@@ -135,7 +135,7 @@
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <!--<Image Source="./Images/bg.jpg" Stretch="Fill" Grid.RowSpan="2"></Image>-->
+        <Image Source="./Images/bg.jpg" Stretch="Fill" Grid.RowSpan="2"></Image>
         <Grid x:Name="headerGrid">
             <TextBlock x:Name="tbTitle" Foreground="White" Text="" VerticalAlignment="Center"></TextBlock>
             <TextBlock x:Name="tbTime" Foreground="White" Margin="0,0,10,0" TextAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
