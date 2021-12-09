@@ -319,12 +319,14 @@ namespace iCabinet.Comps
         
         private void txtStaffID_LostFocus(object sender, RoutedEventArgs e)
         {
+            Log.WriteLog("失去焦点。。。。。");
             TabTipUtil.Close();
         }
 
         private void txtStaffID_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             TabTipUtil.Open();
+            Log.WriteLog("鼠标点击。。。。。");
         }
     }
 }

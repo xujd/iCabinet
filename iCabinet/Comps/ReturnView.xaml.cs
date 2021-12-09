@@ -33,6 +33,7 @@ namespace iCabinet.Comps
         string curRFID = "";
         int gridNo = 0;
         bool isOpening = false;
+        bool isLogined = false; // 用户是否验证通过
         SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
         SolidColorBrush greenBrush = new SolidColorBrush(Colors.LightGreen);
 
@@ -143,6 +144,7 @@ namespace iCabinet.Comps
 
             this.contentGrid.Visibility = Visibility.Visible;
             this.faceGrid.Visibility = Visibility.Collapsed;
+            this.isLogined = true;
             // 查询用户数据
             this.GetData();
         }
@@ -188,6 +190,10 @@ namespace iCabinet.Comps
             }
             else
             {
+                if (!isLogined) // 未登录时
+                {
+                    return;
+                }
                 if (isOpening) // 柜门未关闭。
                 {
                     var msg1 = string.Format("{0}号柜门未关闭，请先关闭...", this.gridNo);

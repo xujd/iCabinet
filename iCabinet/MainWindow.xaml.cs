@@ -31,6 +31,7 @@ namespace iCabinet
 
             this.Loaded += MainWindow_Loaded;
             this.Closing += MainWindow_Closing;
+            this.KeyUp += MainWindow_KeyUp;
 
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1);
@@ -39,6 +40,35 @@ namespace iCabinet
             this.tbTitle.Text = ConfigurationManager.AppSettings["SysTitle"];
 
             Log.WriteLog("程序启动。");
+        }
+
+        private void MainWindow_KeyUp(object sender, KeyEventArgs e)
+        {
+            Console.WriteLine(e.Key);
+            if (e.Key == Key.Escape)
+            {
+                this.WindowState = System.Windows.WindowState.Normal;
+                this.WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
+                this.ResizeMode = System.Windows.ResizeMode.CanResize;
+                this.Topmost = false;
+
+                this.Left = 50.0;
+                this.Top = 50.0;
+                this.Width = 800;
+                this.Height = 600;
+            }
+            else if (e.Key == Key.F11)
+            {
+                this.WindowState = System.Windows.WindowState.Normal;
+                this.WindowStyle = System.Windows.WindowStyle.None;
+                this.ResizeMode = System.Windows.ResizeMode.NoResize;
+                this.Topmost = false;
+
+                this.Left = 0.0;
+                this.Top = 0.0;
+                this.Width = System.Windows.SystemParameters.PrimaryScreenWidth;
+                this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -66,7 +96,7 @@ namespace iCabinet
             this.WindowState = System.Windows.WindowState.Normal;
             this.WindowStyle = System.Windows.WindowStyle.None;
             this.ResizeMode = System.Windows.ResizeMode.NoResize;
-            this.Topmost = true;
+            this.Topmost = false;
 
             this.Left = 0.0;
             this.Top = 0.0;

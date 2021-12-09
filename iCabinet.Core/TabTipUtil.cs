@@ -25,10 +25,10 @@ namespace iCabinet.Core
         private static extern int RegisterWindowMessage(string lpString);
         public static void Open()
         {
-            var tabTipFile = @"C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe";
+            var tabTipFile = "";// @"C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe";
             if (!System.IO.File.Exists(tabTipFile))
             {
-                tabTipFile = Environment.CurrentDirectory + @"\TabTip.exe";
+                tabTipFile = Environment.CurrentDirectory + @"\osk.exe";
             }
             if (System.IO.File.Exists(tabTipFile))
             {

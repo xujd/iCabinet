@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iCabinet.Core;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,6 +14,17 @@ namespace iCabinet
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            Log.WriteLog("异常错误："+e.Exception.Message);
+            e.Handled = true;
+        }
+
         private static System.Threading.Mutex mutex;
         protected override void OnStartup(StartupEventArgs e)
         {
