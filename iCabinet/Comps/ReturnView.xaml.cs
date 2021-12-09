@@ -388,6 +388,11 @@ namespace iCabinet.Comps
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            this.CheckStaff();
+        }
+
+        private void CheckStaff()
+        {
             int id = -1;
             if (int.TryParse(txtStaffID.Text, out id))
             {
@@ -424,12 +429,20 @@ namespace iCabinet.Comps
 
         private void txtStaffID_LostFocus(object sender, RoutedEventArgs e)
         {
-            TabTipUtil.Close();
+            OskUtil.Close();
         }
 
         private void txtStaffID_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            TabTipUtil.Open();
+            OskUtil.Open();
+        }
+
+        private void txtStaffID_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && spIdLogin.Visibility == Visibility.Visible)
+            {
+                this.CheckStaff();
+            }
         }
     }
 }

@@ -30,7 +30,7 @@
                 <ctrls:FaceAni x:Name="faceAni"></ctrls:FaceAni>
                 <StackPanel Orientation="Horizontal" x:Name="spIdLogin" Visibility="Collapsed">
                     <TextBlock Text="工号" FontSize="20" VerticalAlignment="Center"></TextBlock>
-                    <TextBox x:Name="txtStaffID" LostFocus="txtStaffID_LostFocus" Width="320" Height="50" FontSize="20" Margin="11,0,0,0" Padding="0,11,0,0" Text=""></TextBox>
+                    <TextBox x:Name="txtStaffID" LostFocus="txtStaffID_LostFocus" KeyUp="txtStaffID_KeyUp" Width="320" Height="50" FontSize="20" Margin="11,0,0,0" Padding="0,11,0,0" Text=""></TextBox>
                     <Button Margin="11,0,0,0" Background="#FFEAF4F7" Width="160" Height="50" Click="Button_Click">
                         <StackPanel>
                             <Image Source="../Images/people.png" Width="20" Height="20"></Image>

@@ -92,6 +92,7 @@
     <Compile Include="BCC.cs" />
     <Compile Include="FaceIDUtil.cs" />
     <Compile Include="NETSDK.cs" />
+    <Compile Include="OskUtil.cs" />
     <Compile Include="PgUtil.cs" />
     <Compile Include="SerialPortFactory.cs" />
     <Compile Include="SpConfig.cs" />
